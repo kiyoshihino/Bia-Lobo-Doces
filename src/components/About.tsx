@@ -86,7 +86,7 @@ export default function About() {
               aspectRatio: '4/5',
             }}>
               <img
-                src="/about_bia.jpg"
+                src="./about_bia.jpg"
                 alt="Bia Lobo - Confeiteira"
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
               />

@@ -5,13 +5,13 @@ import { useCatalog } from '../hooks/useCatalog'
 
 // Google Drive image IDs from the Bia Lobo folder
 const galleryItems = [
-  { id: 6, src: '/gallery/6.jpg', alt: 'Brigadeiros Gourmet' },
-  { id: 1, src: '/gallery/1.jpg', alt: 'Criação Bia Lobo 1' },
-  { id: 7, src: '/gallery/7.jpg', alt: 'Bia Lobo com Bolo' },
-  { id: 2, src: '/gallery/2.jpg', alt: 'Criação Bia Lobo 2' },
-  { id: 3, src: '/gallery/3.jpg', alt: 'Criação Bia Lobo 3' },
-  { id: 4, src: '/gallery/4.jpg', alt: 'Criação Bia Lobo 4' },
-  { id: 5, src: '/gallery/5.jpg', alt: 'Criação Bia Lobo 5' },
+  { id: 6, src: './gallery/6.jpg', alt: 'Brigadeiros Gourmet' },
+  { id: 1, src: './gallery/1.jpg', alt: 'Criação Bia Lobo 1' },
+  { id: 7, src: './gallery/7.jpg', alt: 'Bia Lobo com Bolo' },
+  { id: 2, src: './gallery/2.jpg', alt: 'Criação Bia Lobo 2' },
+  { id: 3, src: './gallery/3.jpg', alt: 'Criação Bia Lobo 3' },
+  { id: 4, src: './gallery/4.jpg', alt: 'Criação Bia Lobo 4' },
+  { id: 5, src: './gallery/5.jpg', alt: 'Criação Bia Lobo 5' },
 ]
 
 // Fallback gradient colors in case images don't load

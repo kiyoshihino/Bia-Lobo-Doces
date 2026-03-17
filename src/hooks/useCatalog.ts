@@ -32,7 +32,7 @@ export interface Product {
 
 const DEFAULT_COMPANY: CompanyProfile = {
   name: 'Bia Lobo',
-  logo: '/assets/logo.png',
+  logo: './assets/logo.png',
   phone: '+55 61 99259-0209',
   whatsapp: '5561992590209',
   address: 'Qri 15 casa 12c 5 - Santa Maria (Residencial Santos Dumont), Brasília - DF',

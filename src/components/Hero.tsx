@@ -247,7 +247,7 @@ export default function Hero({ onNavigate }: HeroProps) {
             aspectRatio: '1',
           }}>
             <img
-              src="/hero.png"
+              src="./hero.png"
               alt="Doces artesanais Bia Lobo"
               style={{
                 width: '100%',
