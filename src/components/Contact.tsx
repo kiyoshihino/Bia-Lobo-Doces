@@ -1,30 +1,53 @@
-import { motion } from 'framer-motion'
-import { useInView } from 'framer-motion'
-import { useRef } from 'react'
+import { motion, useInView } from 'framer-motion'
+import { useRef, useState } from 'react'
 import { Phone, Instagram, MapPin, Clock } from 'lucide-react'
+import { useCatalog } from '../hooks/useCatalog'
 
 export default function Contact() {
+  const { profile } = useCatalog()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-100px' })
+  
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    message: ''
+  })
+
+  const handleSendMessage = () => {
+    if (!formData.name.trim() || !formData.message.trim()) {
+      alert('Por favor, preencha seu nome e mensagem.')
+      return
+    }
+
+    const message = encodeURIComponent(
+      `Olá ${profile.name}! ✨\n\n` +
+      `*Nome:* ${formData.name}\n` +
+      `*WhatsApp:* ${formData.phone || 'Não informado'}\n\n` +
+      `*Mensagem:* ${formData.message}\n\n` +
+      `Vim pelo site! 🍰`
+    )
+    window.open(`https://wa.me/${profile.whatsapp}?text=${message}`, '_blank')
+  }
 
   const contactInfo = [
     {
       icon: <Phone size={24} />,
       label: 'WhatsApp',
-      value: '+55 61 99259-0209',
-      link: 'https://wa.me/5561992590209'
+      value: profile.whatsapp,
+      link: `https://wa.me/${profile.whatsapp}`
     },
     {
       icon: <Instagram size={24} />,
       label: 'Instagram',
-      value: '@bialobodoces',
-      link: 'https://www.instagram.com/bialobodoces/'
+      value: profile.instagram,
+      link: `https://www.instagram.com/${profile.instagram.replace('@', '')}/`
     },
     {
       icon: <MapPin size={24} />,
       label: 'Endereço',
-      value: 'Santa Maria, Brasília - DF',
-      link: 'https://maps.app.goo.gl/YourMapLink'
+      value: profile.address,
+      link: `https://maps.google.com/?q=${encodeURIComponent(profile.address)}`
     },
     {
       icon: <Clock size={24} />,
@@ -35,7 +58,7 @@ export default function Contact() {
   ]
 
   return (
-    <section id="contato" style={{ 
+    <section id="contato" ref={ref} style={{ 
       padding: '100px 24px', 
       backgroundColor: 'var(--cream-dark)', 
       position: 'relative', 
@@ -49,7 +72,6 @@ export default function Contact() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '60px', alignItems: 'center' }} className="contact-flex-container">
           
           <motion.div
-            ref={ref}
             initial={{ opacity: 0, x: -50 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.7 }}
@@ -137,15 +159,33 @@ export default function Contact() {
             <form style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
               <div>
                 <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, color: 'var(--brown-mid)', marginBottom: '6px', marginLeft: '4px' }}>Seu Nome</label>
-                <input type="text" style={{ width: '100%', padding: '16px 24px', borderRadius: '16px', backgroundColor: 'var(--cream)', border: 'none', outline: 'none', fontFamily: 'Inter, sans-serif' }} placeholder="Como podemos te chamar?" />
+                <input 
+                  type="text" 
+                  value={formData.name}
+                  onChange={e => setFormData({ ...formData, name: e.target.value })}
+                  style={{ width: '100%', padding: '16px 24px', borderRadius: '16px', backgroundColor: 'var(--cream)', border: 'none', outline: 'none', fontFamily: 'Inter, sans-serif' }} 
+                  placeholder="Como podemos te chamar?" 
+                />
               </div>
               <div>
                 <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, color: 'var(--brown-mid)', marginBottom: '6px', marginLeft: '4px' }}>WhatsApp</label>
-                <input type="tel" style={{ width: '100%', padding: '16px 24px', borderRadius: '16px', backgroundColor: 'var(--cream)', border: 'none', outline: 'none', fontFamily: 'Inter, sans-serif' }} placeholder="(61) 99259-0209" />
+                <input 
+                  type="tel" 
+                  value={formData.phone}
+                  onChange={e => setFormData({ ...formData, phone: e.target.value })}
+                  style={{ width: '100%', padding: '16px 24px', borderRadius: '16px', backgroundColor: 'var(--cream)', border: 'none', outline: 'none', fontFamily: 'Inter, sans-serif' }} 
+                  placeholder={profile.whatsapp} 
+                />
               </div>
               <div>
                 <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, color: 'var(--brown-mid)', marginBottom: '6px', marginLeft: '4px' }}>Mensagem</label>
-                <textarea rows={4} style={{ width: '100%', padding: '16px 24px', borderRadius: '16px', backgroundColor: 'var(--cream)', border: 'none', outline: 'none', fontFamily: 'Inter, sans-serif', resize: 'none' }} placeholder="O que você está procurando?"></textarea>
+                <textarea 
+                  rows={4} 
+                  value={formData.message}
+                  onChange={e => setFormData({ ...formData, message: e.target.value })}
+                  style={{ width: '100%', padding: '16px 24px', borderRadius: '16px', backgroundColor: 'var(--cream)', border: 'none', outline: 'none', fontFamily: 'Inter, sans-serif', resize: 'none' }} 
+                  placeholder="O que você está procurando?"
+                ></textarea>
               </div>
               <button 
                 type="button"
@@ -163,7 +203,7 @@ export default function Contact() {
                   marginTop: '10px'
                 }}
                 className="btn-hover"
-                onClick={() => window.open('https://wa.me/5561992590209?text=Olá!%20Vim%20pelo%20site%20e%20gostaria%20de%20um%20orçamento.', '_blank')}
+                onClick={handleSendMessage}
               >
                 Enviar via WhatsApp 🍰
               </button>

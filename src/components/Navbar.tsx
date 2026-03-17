@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Menu, X } from 'lucide-react'
+import { useCatalog } from '../hooks/useCatalog'
 
 const navLinks = [
   { label: 'Início', id: 'inicio' },
@@ -10,11 +11,12 @@ const navLinks = [
 ]
 
 interface NavbarProps {
-  onNavigate: (page: 'home' | 'policies' | 'dashboard') => void
+  onNavigate: (page: 'home' | 'policies' | 'dashboard' | 'catalog' | 'links') => void
   isPoliciesPage: boolean
 }
 
 export default function Navbar({ onNavigate, isPoliciesPage }: NavbarProps) {
+  const { profile } = useCatalog()
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
 
@@ -25,6 +27,12 @@ export default function Navbar({ onNavigate, isPoliciesPage }: NavbarProps) {
   }, [])
 
   const handleLinkClick = (id: string) => {
+    if (id === 'doces') {
+      onNavigate('catalog')
+      setOpen(false)
+      return
+    }
+
     if (isPoliciesPage) {
       onNavigate('home')
       // Small delay to allow home to render before scrolling
@@ -74,13 +82,18 @@ export default function Navbar({ onNavigate, isPoliciesPage }: NavbarProps) {
             width: '44px',
             height: '44px',
             borderRadius: '50%',
-            background: 'linear-gradient(135deg, var(--blush), var(--rose))',
+            background: profile.logo && (profile.logo.startsWith('/') || profile.logo.startsWith('http') || profile.logo.startsWith('data:')) ? 'transparent' : 'linear-gradient(135deg, var(--blush), var(--rose))',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             fontSize: '20px',
+            overflow: 'hidden'
           }}>
-            🌸
+            {profile.logo && (profile.logo.startsWith('/') || profile.logo.startsWith('http') || profile.logo.startsWith('data:')) ? (
+              <img src={profile.logo} alt={profile.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            ) : (
+              profile.logo || '🌸'
+            )}
           </div>
           <div style={{ textAlign: 'left' }}>
             <div style={{
@@ -90,13 +103,14 @@ export default function Navbar({ onNavigate, isPoliciesPage }: NavbarProps) {
               color: 'var(--brown)',
               lineHeight: 1.1,
             }}>
-              Bia Lobo
+              {profile.name}
             </div>
             <div style={{
               fontFamily: 'Dancing Script, cursive',
               fontSize: '13px',
               color: 'var(--gold)',
               letterSpacing: '1px',
+              opacity: 0.8
             }}>
               Doces
             </div>
@@ -146,10 +160,8 @@ export default function Navbar({ onNavigate, isPoliciesPage }: NavbarProps) {
               Políticas
             </button>
 
-          <a
-            href="https://wa.me/5561992590209?text=Olá!%20Gostaria%20de%20fazer%20um%20pedido%20🍰"
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            onClick={() => onNavigate('catalog')}
             style={{
               background: 'linear-gradient(135deg, var(--rose), var(--rose-dark))',
               color: 'white',
@@ -158,7 +170,9 @@ export default function Navbar({ onNavigate, isPoliciesPage }: NavbarProps) {
               fontWeight: 600,
               padding: '10px 22px',
               borderRadius: '50px',
+              border: 'none',
               textDecoration: 'none',
+              cursor: 'pointer',
               transition: 'transform 0.2s, box-shadow 0.2s',
               boxShadow: '0 4px 15px rgba(201, 125, 140, 0.4)',
             }}
@@ -172,7 +186,7 @@ export default function Navbar({ onNavigate, isPoliciesPage }: NavbarProps) {
             }}
           >
             Fazer Pedido
-          </a>
+          </button>
         </nav>
 
         {/* Mobile hamburger */}
@@ -237,10 +251,8 @@ export default function Navbar({ onNavigate, isPoliciesPage }: NavbarProps) {
               Políticas
             </button>
 
-          <a
-            href="https://wa.me/5561992590209?text=Olá!%20Gostaria%20de%20fazer%20um%20pedido%20🍰"
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            onClick={() => { onNavigate('catalog'); setOpen(false) }}
             style={{
               background: 'linear-gradient(135deg, var(--rose), var(--rose-dark))',
               color: 'white',
@@ -248,11 +260,13 @@ export default function Navbar({ onNavigate, isPoliciesPage }: NavbarProps) {
               padding: '14px',
               borderRadius: '50px',
               fontWeight: 600,
+              border: 'none',
+              cursor: 'pointer',
               textDecoration: 'none',
             }}
           >
             Fazer Pedido
-          </a>
+          </button>
         </div>
       )}
 

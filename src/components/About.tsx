@@ -1,6 +1,7 @@
-import { motion } from 'framer-motion'
-import { useInView } from 'framer-motion'
+import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
+import { Sparkles, Heart, Award } from 'lucide-react'
+import { useCatalog } from '../hooks/useCatalog'
 
 const values = [
   { icon: '🌸', title: 'Amor em cada detalhe', desc: 'Cada doce é preparado com cuidado e carinho, como se fosse para a própria família.' },
@@ -9,6 +10,7 @@ const values = [
 ]
 
 export default function About() {
+  const { profile } = useCatalog()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-100px' })
 
@@ -58,7 +60,7 @@ export default function About() {
           }}>
             Quem é a Bia
           </h2>
-          <div className="ornament-divider">
+          <div className="ornament-divider" style={{ marginBottom: '40px' }}>
             <span style={{ color: 'var(--gold)', fontSize: '20px' }}>✦</span>
           </div>
         </motion.div>
@@ -84,8 +86,8 @@ export default function About() {
               aspectRatio: '4/5',
             }}>
               <img
-                src="/about.png"
-                alt="Bia Lobo na cozinha"
+                src="/about_bia.jpg"
+                alt="Bia Lobo - Confeiteira"
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
               />
             </div>
@@ -116,15 +118,18 @@ export default function About() {
               }}>
                 "Cada doce é uma expressão de afeto e dedicação."
               </p>
-              <p style={{
-                fontFamily: 'Inter, sans-serif',
-                fontSize: '12px',
-                color: 'var(--rose)',
-                fontWeight: 600,
-                marginTop: '8px',
-              }}>
-                — Bia Lobo
-              </p>
+              <div style={{ marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                {[
+                  { icon: Sparkles, label: 'Ingredientes Premium' },
+                  { icon: Heart, label: 'Feito com Amor' },
+                  { icon: Award, label: `${profile.experience} de Experiência` }
+                ].map((item, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <item.icon size={16} color="var(--rose)" />
+                    <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--rose)' }}>{item.label}</span>
+                  </div>
+                ))}
+              </div>
             </motion.div>
           </motion.div>
 
@@ -134,77 +139,65 @@ export default function About() {
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.3 }}
           >
-            <p style={{
-              fontFamily: 'Inter, sans-serif',
-              fontSize: '17px',
-              lineHeight: 1.8,
-              color: 'var(--brown-mid)',
-              marginBottom: '20px',
-            }}>
-              Há mais de 8 anos, Bia Lobo transforma ingredientes simples em experiências doces únicas. Nascida em Brasília e apaixonada pela arte da confeitaria, ela descobriu seu dom de criar doces artesanais que contam histórias e conectam pessoas.
-            </p>
-            <p style={{
-              fontFamily: 'Inter, sans-serif',
-              fontSize: '17px',
-              lineHeight: 1.8,
-              color: 'var(--brown-mid)',
-              marginBottom: '36px',
-            }}>
-              Com sede em Santa Maria (Brasília - DF), a Bia Lobo Doces atende casamentos, aniversários, eventos corporativos e entrega momentos de pura felicidade em cada caixinha.
-            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              <div style={{ color: 'var(--brown-mid)', fontSize: '18px', lineHeight: 1.8 }}>
+                <p>
+                  {profile.bio}
+                </p>
+              </div>
 
-            {/* Values */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-              {values.map((value, i) => (
-                <motion.div
-                  key={value.title}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={inView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ duration: 0.5, delay: 0.5 + i * 0.1 }}
-                  style={{
-                    display: 'flex',
-                    gap: '16px',
-                    alignItems: 'flex-start',
-                    padding: '16px',
-                    background: 'rgba(242,196,206,0.1)',
-                    borderRadius: '12px',
-                    border: '1px solid rgba(201,168,76,0.15)',
-                  }}
-                >
-                  <div style={{
-                    fontSize: '24px',
-                    flexShrink: 0,
-                    width: '44px',
-                    height: '44px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    background: 'rgba(242,196,206,0.3)',
-                    borderRadius: '12px',
-                  }}>
-                    {value.icon}
-                  </div>
-                  <div>
-                    <h3 style={{
-                      fontFamily: 'Playfair Display, serif',
-                      fontSize: '16px',
-                      fontWeight: 600,
-                      color: 'var(--brown)',
-                      marginBottom: '4px',
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {values.map((value, i) => (
+                  <motion.div
+                    key={value.title}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={inView ? { opacity: 1, x: 0 } : {}}
+                    transition={{ duration: 0.5, delay: 0.5 + i * 0.1 }}
+                    style={{
+                      display: 'flex',
+                      gap: '16px',
+                      alignItems: 'flex-start',
+                      padding: '16px',
+                      background: 'rgba(242,196,206,0.1)',
+                      borderRadius: '12px',
+                      border: '1px solid rgba(201,168,76,0.15)',
+                    }}
+                  >
+                    <div style={{
+                      fontSize: '24px',
+                      flexShrink: 0,
+                      width: '44px',
+                      height: '44px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      background: 'rgba(242,196,206,0.3)',
+                      borderRadius: '12px',
                     }}>
-                      {value.title}
-                    </h3>
-                    <p style={{
-                      fontFamily: 'Inter, sans-serif',
-                      fontSize: '14px',
-                      color: 'var(--brown-mid)',
-                      lineHeight: 1.5,
-                    }}>
-                      {value.desc}
-                    </p>
-                  </div>
-                </motion.div>
-              ))}
+                      {value.icon}
+                    </div>
+                    <div>
+                      <h3 style={{
+                        fontFamily: 'Playfair Display, serif',
+                        fontSize: '16px',
+                        fontWeight: 600,
+                        color: 'var(--brown)',
+                        marginBottom: '4px',
+                      }}>
+                        {value.title}
+                      </h3>
+                      <p style={{
+                        fontFamily: 'Inter, sans-serif',
+                        fontSize: '14px',
+                        color: 'var(--brown-mid)',
+                        lineHeight: 1.5,
+                      }}>
+                        {value.desc}
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             </div>
           </motion.div>
         </div>

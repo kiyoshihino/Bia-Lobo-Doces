@@ -1,7 +1,13 @@
 import { useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
+import { useCatalog } from '../hooks/useCatalog'
 
-export default function Hero() {
+interface HeroProps {
+  onNavigate: (page: 'home' | 'policies' | 'dashboard' | 'catalog' | 'links') => void
+}
+
+export default function Hero({ onNavigate }: HeroProps) {
+  const { profile } = useCatalog()
   const parallaxRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -108,23 +114,15 @@ export default function Hero() {
           </div>
 
           <h1 style={{
-            fontFamily: 'Playfair Display, serif',
-            fontSize: 'clamp(40px, 5vw, 68px)',
-            fontWeight: 700,
+            fontSize: 'clamp(48px, 8vw, 90px)',
+            fontWeight: 800,
             color: 'var(--brown)',
-            lineHeight: 1.15,
-            marginBottom: '20px',
+            lineHeight: 1,
+            marginBottom: '24px',
+            fontFamily: 'Playfair Display, serif'
           }}>
-            Doces feitos com{' '}
-            <span style={{
-              background: 'linear-gradient(135deg, var(--rose), var(--rose-dark))',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}>
-              amor
-            </span>
-            {' '}e dedicação
+            {profile.name}<br />
+            <span style={{ color: 'var(--rose)' }}>Doces</span>
           </h1>
 
           <p style={{
@@ -139,10 +137,8 @@ export default function Hero() {
           </p>
 
           <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-            <a
-              href="https://wa.me/5561992590209?text=Olá!%20Gostaria%20de%20fazer%20um%20pedido%20🍰"
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              onClick={() => onNavigate('catalog')}
               style={{
                 background: 'linear-gradient(135deg, var(--rose), var(--rose-dark))',
                 color: 'white',
@@ -151,10 +147,12 @@ export default function Hero() {
                 fontWeight: 600,
                 padding: '16px 36px',
                 borderRadius: '50px',
+                border: 'none',
                 textDecoration: 'none',
                 transition: 'all 0.3s ease',
                 boxShadow: '0 8px 30px rgba(201, 125, 140, 0.4)',
                 display: 'inline-block',
+                cursor: 'pointer'
               }}
               onMouseEnter={e => {
                 e.currentTarget.style.transform = 'translateY(-3px)'
@@ -166,7 +164,7 @@ export default function Hero() {
               }}
             >
               🍰 Fazer Pedido
-            </a>
+            </button>
             <a
               href="#doces"
               style={{
@@ -250,7 +248,7 @@ export default function Hero() {
           }}>
             <img
               src="/hero.png"
-              alt="Doces artesanais Bia Lobo Doces"
+              alt="Doces artesanais Bia Lobo"
               style={{
                 width: '100%',
                 height: '100%',

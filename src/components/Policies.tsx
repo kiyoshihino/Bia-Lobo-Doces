@@ -57,7 +57,7 @@ export default function Policies({ onBack }: PoliciesProps) {
             Políticas e Cuidados
           </h1>
           <p style={{ maxWidth: '600px', margin: '0 auto', fontSize: '18px', opacity: 0.9 }}>
-            BIA LOBO DOCES — Confeitaria artesanal para momentos especiais. Tudo o que você precisa saber para garantir a melhor experiência.
+            BIA LOBO — Confeitaria artesanal para momentos especiais. Tudo o que você precisa saber para garantir a melhor experiência.
           </p>
         </motion.div>
       </div>
@@ -264,7 +264,7 @@ export default function Policies({ onBack }: PoliciesProps) {
         {/* Footer info */}
         <div style={{ textAlign: 'center', borderTop: '1px solid rgba(61,35,20,0.1)', paddingTop: '40px' }}>
            <p style={{ fontFamily: 'Dancing Script, cursive', fontSize: '20px', color: 'var(--rose)' }}>
-             Bia Lobo Doces — feito à mão para celebrar momentos únicos
+             Bia Lobo — feito à mão para celebrar momentos únicos
            </p>
         </div>
 

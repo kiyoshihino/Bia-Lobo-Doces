@@ -1,12 +1,22 @@
-import { motion } from 'framer-motion'
-import { Plus, ShoppingCart } from 'lucide-react'
-import { useState } from 'react'
-import type { Product } from '../hooks/useProducts'
-import { useProducts } from '../hooks/useProducts'
+import { motion, AnimatePresence } from 'framer-motion'
+import { ShoppingCart } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { useCatalog } from '../hooks/useCatalog'
+import type { Product } from '../hooks/useCatalog'
 
-export default function Catalog() {
-  const { products } = useProducts()
+interface CatalogProps {
+  onSelectProduct?: (product: Product) => void
+  initialCategory?: string
+}
+
+export default function Catalog({ onSelectProduct, initialCategory = 'Todos' }: CatalogProps) {
+  const { products, categories, profile } = useCatalog()
   const [cart, setCart] = useState<{product: Product, quantity: number}[]>([])
+  const [activeCategory, setActiveCategory] = useState(initialCategory)
+
+  useEffect(() => {
+    setActiveCategory(initialCategory)
+  }, [initialCategory])
 
   const addToCart = (product: Product) => {
     const existing = cart.find(item => item.product.id === product.id)
@@ -21,104 +31,202 @@ export default function Catalog() {
     if (cart.length === 0) return
 
     const message = encodeURIComponent(
-      `Olá Bia! Gostaria de fazer um pedido:\n\n` +
+      `Olá ${profile.name}! Gostaria de fazer um pedido:\n\n` +
       cart.map(item => `- ${item.quantity}x ${item.product.name} (R$ ${(item.product.price * item.quantity).toFixed(2)})`).join('\n') +
       `\n\nTotal: R$ ${cart.reduce((acc, item) => acc + (item.product.price * item.quantity), 0).toFixed(2)}\n\n` +
       `Vim pelo site! ✨`
     )
-    window.open(`https://wa.me/5561992590209?text=${message}`, '_blank')
+    window.open(`https://wa.me/${profile.whatsapp}?text=${message}`, '_blank')
   }
 
+  const filteredProducts = activeCategory === 'Todos' 
+    ? products 
+    : products.filter((p: Product) => p.category === activeCategory)
+
   return (
-    <section id="doces" style={{ padding: '100px 24px', backgroundColor: 'white' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-        <div style={{ textAlign: 'center', marginBottom: '60px' }}>
-          <span style={{ fontFamily: 'Dancing Script, cursive', fontSize: '24px', color: 'var(--rose)', display: 'block', marginBottom: '8px' }}>
-            Cardápio Online
-          </span>
-          <h2 style={{ fontSize: 'clamp(32px, 5vw, 48px)', fontWeight: 700, color: 'var(--brown)', marginBottom: '24px' }}>
-            Nossas Doçuras Artesanais
-          </h2>
-          <div className="ornament-divider">
-            <span style={{ color: 'var(--gold)', fontSize: '20px' }}>✦</span>
-          </div>
-        </div>
-
-        {/* Dynamic Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '32px' }}>
-          {products.map((product, i) => (
-            <motion.div
-              key={product.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="card-hover"
-              style={{
-                backgroundColor: 'var(--cream)',
-                borderRadius: '30px',
-                overflow: 'hidden',
-                border: '1px solid rgba(201, 168, 76, 0.1)',
-                display: 'flex',
-                flexDirection: 'column'
-              }}
+    <section id="doces" style={{ padding: '160px 24px 100px', backgroundColor: 'var(--cream)', minHeight: '100vh' }}>
+      <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
+        <header style={{ textAlign: 'center', marginBottom: '80px' }}>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            style={{ display: 'inline-block', marginBottom: '20px' }}
+          >
+            <span style={{ 
+              fontFamily: 'Dancing Script, cursive', 
+              fontSize: '32px', 
+              color: 'var(--rose)', 
+              display: 'block'
+            }}>
+              Arte em Doces
+            </span>
+          </motion.div>
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            style={{ 
+              fontSize: 'clamp(40px, 8vw, 72px)', 
+              fontWeight: 400, 
+              color: 'var(--brown)', 
+              marginBottom: '32px', 
+              fontFamily: 'Playfair Display, serif',
+              letterSpacing: '-2px'
+            }}
+          >
+            Nosso Cardápio
+          </motion.h2>
+          
+          {/* Elegant Category Navigation */}
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'center',
+            gap: '40px', 
+            overflowX: 'auto', 
+            padding: '20px 0',
+            marginBottom: '60px',
+            borderTop: '1px solid rgba(61, 35, 20, 0.1)',
+            borderBottom: '1px solid rgba(61, 35, 20, 0.1)',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none'
+          }} className="hide-scrollbar">
+            <button
+               onClick={() => setActiveCategory('Todos')}
+               style={{
+                 background: 'none',
+                 border: 'none',
+                 cursor: 'pointer',
+                 fontFamily: 'Inter, sans-serif',
+                 fontSize: '14px',
+                 fontWeight: 600,
+                 textTransform: 'uppercase',
+                 letterSpacing: '2px',
+                 color: activeCategory === 'Todos' ? 'var(--rose)' : 'var(--brown-mid)',
+                 position: 'relative',
+                 transition: 'color 0.3s'
+               }}
             >
-              <div style={{ height: '260px', overflow: 'hidden', position: 'relative' }}>
-                <img 
-                  src={product.image} 
-                  alt={product.name} 
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s ease' }} 
-                  className="product-img"
-                />
-                <div style={{ 
-                  position: 'absolute', 
-                  top: '16px', 
-                  right: '16px', 
-                  backgroundColor: 'white', 
-                  color: 'var(--brown)', 
-                  fontWeight: 700, 
-                  padding: '6px 14px', 
-                  borderRadius: '100px', 
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-                  fontSize: '14px'
-                }}>
-                  R$ {product.price.toFixed(2)}
-                </div>
-              </div>
+              Todos
+              {activeCategory === 'Todos' && <motion.div layoutId="cat-underline" style={{ position: 'absolute', bottom: '-22px', left: 0, right: 0, height: '2px', backgroundColor: 'var(--rose)' }} />}
+            </button>
 
-              <div style={{ padding: '24px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-                <h3 style={{ fontSize: '20px', fontWeight: 700, color: 'var(--brown)', marginBottom: '8px' }}>
-                  {product.name}
-                </h3>
-                <p style={{ fontSize: '14px', color: 'var(--brown-mid)', lineHeight: 1.6, marginBottom: '20px' }}>
-                  {product.description}
-                </p>
-                
-                <div style={{ marginTop: 'auto', display: 'flex', gap: '12px' }}>
-                   <button 
-                    onClick={() => addToCart(product)}
+            {categories.map((cat: any) => (
+              <button
+                key={cat.id}
+                onClick={() => setActiveCategory(cat.name)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontFamily: 'Inter, sans-serif',
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  textTransform: 'uppercase',
+                  letterSpacing: '2px',
+                  color: activeCategory === cat.name ? 'var(--rose)' : 'var(--brown-mid)',
+                  position: 'relative',
+                  transition: 'color 0.3s'
+                }}
+              >
+                {cat.name}
+                {activeCategory === cat.name && <motion.div layoutId="cat-underline" style={{ position: 'absolute', bottom: '-22px', left: 0, right: 0, height: '2px', backgroundColor: 'var(--rose)' }} />}
+              </button>
+            ))}
+          </div>
+        </header>
+
+        {/* High-End Layout Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '80px 48px' }}>
+          <AnimatePresence mode="popLayout">
+            {filteredProducts.map((product: Product) => (
+              <motion.div
+                key={product.id}
+                layout
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '24px'
+                }}
+              >
+                <div style={{ 
+                  aspectRatio: '4/5', 
+                  overflow: 'hidden', 
+                  position: 'relative',
+                  borderRadius: '4px',
+                  backgroundColor: 'white',
+                  boxShadow: '0 20px 40px rgba(61, 35, 20, 0.05)'
+                }}>
+                  <motion.img 
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.8 }}
+                    src={product.image} 
+                    alt={product.name} 
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                  />
+                </div>
+
+                <div style={{ textAlign: 'center' }}>
+                  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'baseline', gap: '12px', marginBottom: '8px' }}>
+                    <h3 
+                      onClick={() => onSelectProduct?.(product)}
+                      style={{ 
+                        fontSize: '28px', 
+                        fontWeight: 500, 
+                        color: 'var(--brown)', 
+                        fontFamily: 'Playfair Display, serif',
+                        lineHeight: 1.2,
+                        cursor: 'pointer'
+                      }}
+                    >
+                      {product.name}
+                    </h3>
+                  </div>
+                  
+
+                  <div style={{ 
+                    fontSize: '18px', 
+                    fontWeight: 600, 
+                    color: 'var(--rose)', 
+                    marginBottom: '20px',
+                    fontFamily: 'Playfair Display, serif'
+                  }}>
+                    R$ {product.price.toFixed(2)}
+                  </div>
+                  
+                  <button 
+                    onClick={() => onSelectProduct ? onSelectProduct(product) : addToCart(product)}
                     style={{ 
-                      flex: 1,
-                      backgroundColor: 'var(--rose)', 
-                      color: 'white', 
-                      border: 'none', 
-                      padding: '12px', 
-                      borderRadius: '16px', 
+                      backgroundColor: 'transparent', 
+                      color: 'var(--brown)', 
+                      border: '1px solid var(--brown)', 
+                      padding: '12px 32px', 
+                      borderRadius: '100px', 
                       fontWeight: 600, 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      justifyContent: 'center', 
-                      gap: '8px',
+                      fontSize: '13px',
+                      textTransform: 'uppercase', 
+                      letterSpacing: '1px',
                       cursor: 'pointer',
-                      transition: 'all 0.3s'
+                      transition: 'all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1)'
+                    }}
+                    onMouseEnter={e => {
+                      e.currentTarget.style.backgroundColor = 'var(--brown)'
+                      e.currentTarget.style.color = 'white'
+                    }}
+                    onMouseLeave={e => {
+                      e.currentTarget.style.backgroundColor = 'transparent'
+                      e.currentTarget.style.color = 'var(--brown)'
                     }}
                   >
-                    <Plus size={18} /> Adicionar
+                    Ver Detalhes
                   </button>
                 </div>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
 
         {/* Float Cart Button */}

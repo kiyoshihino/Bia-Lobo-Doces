@@ -1,45 +1,17 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
 import { useRef, useState } from 'react'
+import { useCatalog } from '../hooks/useCatalog'
 
 // Google Drive image IDs from the Bia Lobo folder
 const galleryItems = [
-  {
-    id: 1,
-    src: 'https://drive.google.com/thumbnail?id=1aYGFBGabNtOD9_g8f5vu7m5oGOHEq1EV&sz=w600',
-    alt: 'Brigadeiros artesanais',
-    label: 'Brigadeiros Gourmet',
-  },
-  {
-    id: 2,
-    src: 'https://drive.google.com/thumbnail?id=1jDRq9hbR4nN7cI5FzGUzP-0l5WUQH4Hk&sz=w600',
-    alt: 'Bolo de aniversário',
-    label: 'Bolo Especial',
-  },
-  {
-    id: 3,
-    src: 'https://drive.google.com/thumbnail?id=1y-GRGEFj81r7F_aGKgYJ72Jh8ZsxC5Nm&sz=w600',
-    alt: 'Bolo de maracujá',
-    label: 'Bolo de Maracujá',
-  },
-  {
-    id: 4,
-    src: 'https://drive.google.com/thumbnail?id=1HvNazS3y_P3GaJpYneMFpMkr3usPXSKB&sz=w600',
-    alt: 'Doce artesanal',
-    label: 'Docinhos Finos',
-  },
-  {
-    id: 5,
-    src: 'https://drive.google.com/thumbnail?id=1Dl6bEZnGSHJM5F_r_LxiWrWPQ_SZ7pEr&sz=w600',
-    alt: 'Bolo de caramelo',
-    label: 'Bolo Caramelo',
-  },
-  {
-    id: 6,
-    src: 'https://drive.google.com/thumbnail?id=10QlmFgimPU3H5gU9D02bLVDxVf_JTYL7&sz=w600',
-    alt: 'Caixinha de doces',
-    label: 'Kit Presenteável',
-  },
+  { id: 6, src: '/gallery/6.jpg', alt: 'Brigadeiros Gourmet' },
+  { id: 1, src: '/gallery/1.jpg', alt: 'Criação Bia Lobo 1' },
+  { id: 7, src: '/gallery/7.jpg', alt: 'Bia Lobo com Bolo' },
+  { id: 2, src: '/gallery/2.jpg', alt: 'Criação Bia Lobo 2' },
+  { id: 3, src: '/gallery/3.jpg', alt: 'Criação Bia Lobo 3' },
+  { id: 4, src: '/gallery/4.jpg', alt: 'Criação Bia Lobo 4' },
+  { id: 5, src: '/gallery/5.jpg', alt: 'Criação Bia Lobo 5' },
 ]
 
 // Fallback gradient colors in case images don't load
@@ -62,9 +34,10 @@ function GalleryCard({ item, index }: { item: typeof galleryItems[0], index: num
   const sizes = [
     { gridColumn: 'span 1', gridRow: 'span 2' },
     { gridColumn: 'span 1', gridRow: 'span 1' },
-    { gridColumn: 'span 1', gridRow: 'span 1' },
-    { gridColumn: 'span 1', gridRow: 'span 1' },
     { gridColumn: 'span 1', gridRow: 'span 2' },
+    { gridColumn: 'span 1', gridRow: 'span 1' },
+    { gridColumn: 'span 1', gridRow: 'span 1' },
+    { gridColumn: 'span 1', gridRow: 'span 1' },
     { gridColumn: 'span 1', gridRow: 'span 1' },
   ]
 
@@ -75,12 +48,11 @@ function GalleryCard({ item, index }: { item: typeof galleryItems[0], index: num
       animate={inView ? { opacity: 1, scale: 1 } : {}}
       transition={{ duration: 0.5, delay: index * 0.08 }}
       style={{
-        ...sizes[index],
+        ...sizes[index % sizes.length],
         borderRadius: '16px',
         overflow: 'hidden',
         position: 'relative',
-        cursor: 'pointer',
-        background: imageError ? fallbackColors[index] : '#F5E9D8',
+        background: imageError ? fallbackColors[index % fallbackColors.length] : '#F5E9D8',
         minHeight: '200px',
         transition: 'transform 0.3s ease, box-shadow 0.3s ease',
       }}
@@ -106,42 +78,18 @@ function GalleryCard({ item, index }: { item: typeof galleryItems[0], index: num
           alignItems: 'center',
           justifyContent: 'center',
           fontSize: '48px',
-          background: fallbackColors[index],
+          background: fallbackColors[index % fallbackColors.length],
           minHeight: '200px',
         }}>
-          {fallbackEmojis[index]}
+          {fallbackEmojis[index % fallbackEmojis.length]}
         </div>
       )}
-
-      {/* Hover overlay */}
-      <div style={{
-        position: 'absolute',
-        inset: 0,
-        background: 'linear-gradient(to top, rgba(61,35,20,0.7) 30%, transparent 70%)',
-        opacity: 0,
-        transition: 'opacity 0.3s ease',
-        display: 'flex',
-        alignItems: 'flex-end',
-        padding: '16px',
-      }}
-        className={`gallery-overlay-${index}`}
-        onMouseEnter={e => { e.currentTarget.style.opacity = '1' }}
-        onMouseLeave={e => { e.currentTarget.style.opacity = '0' }}
-      >
-        <span style={{
-          fontFamily: 'Playfair Display, serif',
-          color: 'white',
-          fontSize: '16px',
-          fontWeight: 600,
-        }}>
-          {item.label}
-        </span>
-      </div>
     </motion.div>
   )
 }
 
 export default function Gallery() {
+  const { profile } = useCatalog()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true })
 
@@ -188,7 +136,8 @@ export default function Gallery() {
             margin: '16px auto 0',
             lineHeight: 1.6,
           }}>
-            Cada peça é única, feita com carinho e atenção aos detalhes. Inspire-se nas nossas criações.
+            Cada peça é única, feita com carinho e atenção aos detalhes.<br />
+            Inspire-se nas nossas criações.
           </p>
         </motion.div>
 
@@ -227,7 +176,7 @@ export default function Gallery() {
             Quer ver mais criações? Nos siga no Instagram! 📸
           </p>
           <a
-            href="https://www.instagram.com/bialobodoces/"
+            href={`https://www.instagram.com/${profile.instagram.replace('@', '')}/`}
             target="_blank"
             rel="noopener noreferrer"
             style={{
@@ -254,7 +203,7 @@ export default function Gallery() {
               e.currentTarget.style.boxShadow = '0 8px 25px rgba(225, 48, 108, 0.35)'
             }}
           >
-            📷 @bialobodoces
+            📷 @{profile.instagram.replace('@', '')}
           </a>
         </motion.div>
       </div>

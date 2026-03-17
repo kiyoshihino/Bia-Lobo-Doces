@@ -1,10 +1,12 @@
-import { Instagram, Facebook, Mail, MapPin } from 'lucide-react'
+import { Instagram, Mail, MapPin } from 'lucide-react'
+import { useCatalog } from '../hooks/useCatalog'
 
 interface FooterProps {
-  onNavigate: (page: 'home' | 'policies' | 'dashboard') => void
+  onNavigate: (page: 'home' | 'policies' | 'dashboard' | 'catalog' | 'links') => void
 }
 
 export default function Footer({ onNavigate }: FooterProps) {
+  const { profile, categories } = useCatalog()
   const currentYear = new Date().getFullYear()
 
   return (
@@ -21,32 +23,40 @@ export default function Footer({ onNavigate }: FooterProps) {
           
           <div style={{ width: '100%', maxWidth: '300px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
-              <div style={{ width: '44px', height: '44px', borderRadius: '50%', background: 'linear-gradient(135deg, var(--blush), var(--rose))', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px' }}>
-                🌸
+              <div style={{
+                width: '44px',
+                height: '44px',
+                borderRadius: '50%',
+                background: profile.logo && (profile.logo.startsWith('/') || profile.logo.startsWith('http') || profile.logo.startsWith('data:')) ? 'transparent' : 'linear-gradient(135deg, var(--blush), var(--rose))',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '20px',
+                overflow: 'hidden'
+              }}>
+                {profile.logo && (profile.logo.startsWith('/') || profile.logo.startsWith('http') || profile.logo.startsWith('data:')) ? (
+                  <img src={profile.logo} alt={profile.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                ) : (
+                  profile.logo || '🌸'
+                )}
               </div>
               <div style={{ textAlign: 'left' }}>
-                <h3 style={{ fontFamily: 'Playfair Display, serif', fontWeight: 700, fontSize: '22px', lineHeight: 1 }}>Bia Lobo</h3>
+                <h3 style={{ fontFamily: 'Playfair Display, serif', fontWeight: 700, fontSize: '22px', lineHeight: 1 }}>{profile.name}</h3>
                 <p style={{ fontFamily: 'Dancing Script, cursive', color: 'var(--gold-light)', fontSize: '14px', letterSpacing: '2px' }}>Doces</p>
               </div>
             </div>
             <p style={{ color: 'rgba(253, 246, 238, 0.6)', fontSize: '14px', lineHeight: 1.8, marginBottom: '24px' }}>
-              Criando momentos doces e memórias inesquecíveis através da confeitaria artesanal em Brasília.
+              {profile.bio.substring(0, 100)}...
             </p>
             <div style={{ display: 'flex', gap: '16px' }}>
-              <a href="https://www.instagram.com/bialobodoces/" target="_blank" rel="noopener noreferrer" 
+              <a href={`https://www.instagram.com/${profile.instagram.replace('@', '')}/`} target="_blank" rel="noopener noreferrer" 
                 style={{ width: '40px', height: '40px', borderRadius: '50%', border: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', textDecoration: 'none', transition: 'all 0.3s ease' }}
                 onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--rose)'; e.currentTarget.style.borderColor = 'var(--rose)' }}
                 onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)' }}
               >
                 <Instagram size={18} />
               </a>
-              <a href="#" style={{ width: '40px', height: '40px', borderRadius: '50%', border: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', textDecoration: 'none', transition: 'all 0.3s ease' }}
-                onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--rose)'; e.currentTarget.style.borderColor = 'var(--rose)' }}
-                onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)' }}
-              >
-                <Facebook size={18} />
-              </a>
-              <a href="mailto:contato@bialobodoces.com" style={{ width: '40px', height: '40px', borderRadius: '50%', border: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', textDecoration: 'none', transition: 'all 0.3s ease' }}
+              <a href={`mailto:${profile.email}`} style={{ width: '40px', height: '40px', borderRadius: '50%', border: '1px solid rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', textDecoration: 'none', transition: 'all 0.3s ease' }}
                 onMouseEnter={e => { e.currentTarget.style.backgroundColor = 'var(--rose)'; e.currentTarget.style.borderColor = 'var(--rose)' }}
                 onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)' }}
               >
@@ -66,12 +76,18 @@ export default function Footer({ onNavigate }: FooterProps) {
           </div>
 
           <div style={{ minWidth: '150px' }}>
-            <h4 style={{ fontFamily: 'Playfair Display, serif', fontWeight: 700, fontSize: '18px', color: 'var(--gold-light)', marginBottom: '24px' }}>Início</h4>
+            <h4 style={{ fontFamily: 'Playfair Display, serif', fontWeight: 700, fontSize: '18px', color: 'var(--gold-light)', marginBottom: '24px' }}>Categorias</h4>
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              <li><button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('doces')?.scrollIntoView({behavior:'smooth'}), 100)}} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: 'rgba(253, 246, 238, 0.7)', fontSize: '14px' }}>Brigadeiros Gourmet</button></li>
-              <li><button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('doces')?.scrollIntoView({behavior:'smooth'}), 100)}} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: 'rgba(253, 246, 238, 0.7)', fontSize: '14px' }}>Bolos Decorados</button></li>
-              <li><button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('doces')?.scrollIntoView({behavior:'smooth'}), 100)}} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: 'rgba(253, 246, 238, 0.7)', fontSize: '14px' }}>Doces Finos</button></li>
-              <li><button onClick={() => { onNavigate('home'); setTimeout(() => document.getElementById('doces')?.scrollIntoView({behavior:'smooth'}), 100)}} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: 'rgba(253, 246, 238, 0.7)', fontSize: '14px' }}>Kits Presente</button></li>
+              {categories.slice(0, 4).map(cat => (
+                <li key={cat.id}>
+                  <button 
+                    onClick={() => onNavigate('catalog')}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: 'rgba(253, 246, 238, 0.7)', fontSize: '14px' }}
+                  >
+                    {cat.name}
+                  </button>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -81,7 +97,7 @@ export default function Footer({ onNavigate }: FooterProps) {
               <div style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                 <MapPin size={18} style={{ color: 'var(--rose)', flexShrink: 0 }} />
                 <p style={{ color: 'rgba(253, 246, 238, 0.7)', fontSize: '14px', lineHeight: 1.5 }}>
-                  Qri 15 casa 12c 5 - Santa Maria (Residencial Santos Dumont), Brasília - DF
+                  {profile.address}
                 </p>
               </div>
               <div style={{ padding: '20px', borderRadius: '16px', backgroundColor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
@@ -105,7 +121,7 @@ export default function Footer({ onNavigate }: FooterProps) {
           flexWrap: 'wrap' 
         }} className="footer-bottom">
           <p style={{ color: 'rgba(253, 246, 238, 0.4)', fontSize: '12px', letterSpacing: '1px' }}>
-            &copy; {currentYear} Bia Lobo Doces. Todos os direitos reservados.
+            &copy; {currentYear} {profile.name}. Todos os direitos reservados.
           </p>
           <div style={{ display: 'flex', gap: '30px' }}>
             <button 
@@ -114,8 +130,8 @@ export default function Footer({ onNavigate }: FooterProps) {
             >
               Admin
             </button>
-            <a href="#" style={{ color: 'rgba(253, 246, 238, 0.4)', fontSize: '12px', textDecoration: 'none' }}>Privacidade</a>
-            <a href="#" style={{ color: 'rgba(253, 246, 238, 0.4)', fontSize: '12px', textDecoration: 'none' }}>Termos</a>
+            <button onClick={() => onNavigate('policies')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(253, 246, 238, 0.4)', fontSize: '12px' }}>Privacidade</button>
+            <button onClick={() => onNavigate('policies')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(253, 246, 238, 0.4)', fontSize: '12px' }}>Termos</button>
             <p style={{ color: 'rgba(253, 246, 238, 0.4)', fontSize: '12px' }}>Feito com Amore ❤️</p>
           </div>
         </div>
