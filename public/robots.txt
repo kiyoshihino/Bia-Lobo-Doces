@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://bialobo.com.br/sitemap.xml
+Sitemap: https://bialobodoces.com.br/sitemap.xml

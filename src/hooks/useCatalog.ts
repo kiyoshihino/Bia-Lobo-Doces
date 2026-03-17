@@ -39,7 +39,7 @@ const DEFAULT_COMPANY: CompanyProfile = {
   addressShort: 'Santa Maria, Brasília e região',
   instagram: 'bialobodoces',
   facebook: 'bialobodoces',
-  email: 'contato@bialobodoces.com',
+  email: 'contato@bialobodoces.com.br',
   bio: 'Há mais de 8 anos, Bia Lobo transforma ingredientes simples em experiências doces únicas. Nascida em Brasília e apaixonada pela arte da confeitaria, ela descobriu seu dom de criar doces artesanais que contam histórias e conectam pessoas.',
   experience: '8+'
 };
