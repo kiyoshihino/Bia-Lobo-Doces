@@ -46,7 +46,7 @@ export default function Contact() {
       <div style={{ position: 'absolute', bottom: 0, left: 0, width: '300px', height: '300px', backgroundColor: 'rgba(201, 168, 76, 0.1)', borderRadius: '50%', filter: 'blur(80px)', margin: '0 0 -150px -150px' }}></div>
 
       <div style={{ maxWidth: '1100px', margin: '0 auto', position: 'relative', zIndex: 10 }}>
-        <div style={{ display: 'flex', flexDirection: 'column', lg: 'row', gap: '60px', alignItems: 'center' }} className="contact-flex-container">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '60px', alignItems: 'center' }} className="contact-flex-container">
           
           <motion.div
             ref={ref}

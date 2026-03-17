@@ -25,7 +25,7 @@ const galleryItems = [
   {
     id: 4,
     src: 'https://drive.google.com/thumbnail?id=1HvNazS3y_P3GaJpYneMFpMkr3usPXSKB&sz=w600',
-    alt: 'Doença artesanal',
+    alt: 'Doce artesanal',
     label: 'Docinhos Finos',
   },
   {
@@ -54,7 +54,7 @@ const fallbackColors = [
 
 const fallbackEmojis = ['🍫', '🎂', '🍮', '🍭', '🥐', '🎁']
 
-function GalleryCard({ item, index, fallback }: { item: typeof galleryItems[0], index: number, fallback: boolean }) {
+function GalleryCard({ item, index }: { item: typeof galleryItems[0], index: number }) {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
   const [imageError, setImageError] = useState(false)
@@ -144,7 +144,6 @@ function GalleryCard({ item, index, fallback }: { item: typeof galleryItems[0], 
 export default function Gallery() {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true })
-  const [showFallback] = useState(false)
 
   return (
     <section id="galeria" style={{
@@ -202,7 +201,7 @@ export default function Gallery() {
           marginBottom: '48px',
         }} className="gallery-grid">
           {galleryItems.map((item, i) => (
-            <GalleryCard key={item.id} item={item} index={i} fallback={showFallback} />
+            <GalleryCard key={item.id} item={item} index={i} />
           ))}
         </div>
 

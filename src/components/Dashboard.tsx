@@ -59,6 +59,7 @@ export default function Dashboard({ onBack }: DashboardProps) {
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
                <button 
                 onClick={onBack}
+                aria-label="Voltar para a página inicial"
                 style={{ background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '50%', width: '40px', height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', cursor: 'pointer' }}
                >
                  <ArrowLeft size={20} />
@@ -103,12 +104,14 @@ export default function Dashboard({ onBack }: DashboardProps) {
                 <div style={{ position: 'absolute', top: '12px', right: '12px', display: 'flex', gap: '8px' }}>
                   <button 
                     onClick={() => handleOpenEdit(product)}
+                    aria-label={`Editar ${product.name}`}
                     style={{ width: '36px', height: '36px', borderRadius: '50%', backgroundColor: 'white', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--brown)', cursor: 'pointer', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }}
                   >
                     <Edit2 size={18} />
                   </button>
                   <button 
                     onClick={() => deleteProduct(product.id)}
+                    aria-label={`Excluir ${product.name}`}
                     style={{ width: '36px', height: '36px', borderRadius: '50%', backgroundColor: '#fee2e2', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ef4444', cursor: 'pointer', boxShadow: '0 4px 10px rgba(0,0,0,0.1)' }}
                   >
                     <Trash2 size={18} />
@@ -163,7 +166,11 @@ export default function Dashboard({ onBack }: DashboardProps) {
                 <h2 style={{ fontSize: '24px', fontWeight: 700, color: 'var(--brown)', margin: 0 }}>
                   {editingProduct ? 'Editar Doce' : 'Cadastrar Novo Doce'}
                 </h2>
-                <button onClick={() => setIsModalOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8' }}>
+                <button 
+                  onClick={() => setIsModalOpen(false)} 
+                  aria-label="Fechar modal"
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8' }}
+                >
                   <X size={24} />
                 </button>
               </div>
@@ -196,10 +203,12 @@ export default function Dashboard({ onBack }: DashboardProps) {
                     </select>
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Preço (R$)</label>
+                    <label htmlFor="product-price" style={{ display: 'block', fontSize: '14px', fontWeight: 600, color: '#475569', marginBottom: '8px' }}>Preço (R$)</label>
                     <input 
+                      id="product-price"
                       required
                       type="number" 
+                      min="0.01"
                       step="0.01"
                       value={formData.price}
                       onChange={e => setFormData({...formData, price: parseFloat(e.target.value)})}

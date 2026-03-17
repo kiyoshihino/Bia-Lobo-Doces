@@ -67,6 +67,7 @@ export default function Navbar({ onNavigate, isPoliciesPage }: NavbarProps) {
         {/* Logo */}
         <button 
           onClick={() => onNavigate('home')}
+          aria-label="Voltar para o início"
           style={{ background: 'none', border: 'none', padding: 0, display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}
         >
           <div style={{
@@ -178,6 +179,8 @@ export default function Navbar({ onNavigate, isPoliciesPage }: NavbarProps) {
         <button
           className="mobile-menu-btn"
           onClick={() => setOpen(!open)}
+          aria-label={open ? "Fechar menu" : "Abrir menu"}
+          aria-expanded={open}
           style={{
             background: 'none',
             border: 'none',
