@@ -149,8 +149,8 @@ export default function Hero({ onNavigate }: HeroProps) {
             >
               🍰 Fazer Pedido
             </button>
-            <a
-              href="#doces"
+            <button
+              onClick={() => onNavigate('catalog')}
               style={{
                 background: 'transparent',
                 color: 'var(--brown)',
@@ -163,6 +163,7 @@ export default function Hero({ onNavigate }: HeroProps) {
                 border: '2px solid rgba(61, 35, 20, 0.2)',
                 transition: 'all 0.3s ease',
                 display: 'inline-block',
+                cursor: 'pointer'
               }}
               onMouseEnter={e => {
                 e.currentTarget.style.borderColor = 'var(--gold)'
@@ -174,7 +175,7 @@ export default function Hero({ onNavigate }: HeroProps) {
               }}
             >
               Ver Cardápio
-            </a>
+            </button>
           </div>
 
           {/* Stats */}

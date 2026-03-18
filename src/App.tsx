@@ -11,7 +11,6 @@ import ProductModal from './components/ProductModal'
 import Gallery from './components/Gallery'
 import Testimonials from './components/Testimonials'
 import Contact from './components/Contact'
-import Products from './components/Products'
 import Footer from './components/Footer'
 import Policies from './components/Policies'
 import Dashboard from './components/Dashboard'
@@ -168,7 +167,6 @@ function App() {
         setSelectedCategory(cat)
         setCurrentPage('catalog')
       }} />
-      <Products />
       <Gallery />
       <Testimonials />
       <Contact />
