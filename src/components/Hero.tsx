@@ -90,6 +90,7 @@ export default function Hero({ onNavigate }: HeroProps) {
           initial={{ opacity: 0, x: -50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.9, ease: 'easeOut' }}
+          className="hero-text-container"
         >
           <div style={{
             display: 'inline-flex',
@@ -137,7 +138,7 @@ export default function Hero({ onNavigate }: HeroProps) {
             Brigadeiros gourmet, bolos artesanais e doces personalizados que encantam paladares e criam memórias afetivas inesquecíveis.
           </p>
 
-          <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+          <div className="hero-buttons" style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
             <button
               onClick={() => onNavigate('catalog')}
               style={{
@@ -195,7 +196,7 @@ export default function Hero({ onNavigate }: HeroProps) {
           </div>
 
           {/* Stats */}
-          <div style={{
+          <div className="hero-stats" style={{
             display: 'flex',
             gap: 'clamp(20px, 5vw, 40px)',
             marginTop: '48px',
@@ -368,6 +369,26 @@ export default function Hero({ onNavigate }: HeroProps) {
           }
           .petal, .scroll-indicator { display: none; }
           .hero-label { font-size: 10px !important; }
+          
+          /* Centering for mobile */
+          .hero-text-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+          }
+          .hero-text-container h1 {
+            text-align: center !important;
+          }
+          .hero-text-container p {
+            text-align: center !important;
+          }
+          .hero-buttons {
+            justify-content: center !important;
+          }
+          .hero-stats {
+            justify-content: center !important;
+          }
         }
       `}</style>
     </section>
