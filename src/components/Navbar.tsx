@@ -8,7 +8,6 @@ const navLinks = [
   { label: 'Nossos Doces', id: 'doces' },
   { label: 'Galeria', id: 'galeria' },
   { label: 'Contato', id: 'contato' },
-  { label: 'Links', id: 'links' },
 ]
 
 interface NavbarProps {
@@ -168,6 +167,25 @@ export default function Navbar({ onNavigate, isPoliciesPage }: NavbarProps) {
             </button>
 
           <button
+              onClick={() => onNavigate('links')}
+              style={{
+                fontFamily: 'Inter, sans-serif',
+                fontSize: '14px',
+                fontWeight: 500,
+                color: 'var(--brown-mid)',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                letterSpacing: '0.5px',
+                transition: 'color 0.2s',
+              }}
+              onMouseEnter={e => (e.currentTarget.style.color = 'var(--rose)')}
+              onMouseLeave={e => (e.currentTarget.style.color = 'var(--brown-mid)')}
+            >
+              Links
+            </button>
+
+          <button
             onClick={() => onNavigate('catalog')}
             style={{
               background: 'linear-gradient(135deg, var(--rose), var(--rose-dark))',
@@ -259,6 +277,21 @@ export default function Navbar({ onNavigate, isPoliciesPage }: NavbarProps) {
             </button>
 
           <button
+            onClick={() => { onNavigate('links'); setOpen(false) }}
+            style={{
+              fontFamily: 'Playfair Display, serif',
+              fontSize: '20px',
+              color: 'var(--brown)',
+              background: 'none',
+              border: 'none',
+              textAlign: 'left',
+              cursor: 'pointer',
+            }}
+          >
+            Links
+          </button>
+
+          <button
             onClick={() => { onNavigate('catalog'); setOpen(false) }}
             style={{
               background: 'linear-gradient(135deg, var(--rose), var(--rose-dark))',
@@ -270,6 +303,7 @@ export default function Navbar({ onNavigate, isPoliciesPage }: NavbarProps) {
               border: 'none',
               cursor: 'pointer',
               textDecoration: 'none',
+              marginTop: '10px'
             }}
           >
             Fazer Pedido

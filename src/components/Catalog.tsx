@@ -44,7 +44,7 @@ export default function Catalog({ onSelectProduct, initialCategory = 'Todos' }: 
     : products.filter((p: Product) => p.category === activeCategory)
 
   return (
-    <section id="doces" style={{ padding: '160px 24px 100px', backgroundColor: 'var(--cream)', minHeight: '100vh' }}>
+    <section id="doces" style={{ padding: 'clamp(100px, 15vh, 160px) 24px 100px', backgroundColor: 'var(--cream)', minHeight: '100vh' }}>
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
         <header style={{ textAlign: 'center', marginBottom: '80px' }}>
           <motion.div
@@ -136,7 +136,11 @@ export default function Catalog({ onSelectProduct, initialCategory = 'Todos' }: 
         </header>
 
         {/* High-End Layout Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '80px 48px' }}>
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))', 
+          gap: '40px 24px' 
+        }}>
           <AnimatePresence mode="popLayout">
             {filteredProducts.map((product: Product) => (
               <motion.div

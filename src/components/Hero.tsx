@@ -37,8 +37,8 @@ export default function Hero({ onNavigate }: HeroProps) {
         position: 'absolute',
         top: '-100px',
         right: '-100px',
-        width: '500px',
-        height: '500px',
+        width: 'min(500px, 100%)',
+        height: 'min(500px, 100%)',
         borderRadius: '50%',
         background: 'radial-gradient(circle, rgba(242, 196, 206, 0.4) 0%, transparent 70%)',
         pointerEvents: 'none',
@@ -47,8 +47,8 @@ export default function Hero({ onNavigate }: HeroProps) {
         position: 'absolute',
         bottom: '-80px',
         left: '-80px',
-        width: '400px',
-        height: '400px',
+        width: 'min(400px, 100%)',
+        height: 'min(400px, 100%)',
         borderRadius: '50%',
         background: 'radial-gradient(circle, rgba(201, 168, 76, 0.15) 0%, transparent 70%)',
         pointerEvents: 'none',
@@ -68,6 +68,7 @@ export default function Hero({ onNavigate }: HeroProps) {
             animationDelay: `${i * 0.8}s`,
             pointerEvents: 'none',
           }}
+          className="petal"
         >
           {petal}
         </div>
@@ -76,7 +77,7 @@ export default function Hero({ onNavigate }: HeroProps) {
       <div style={{
         maxWidth: '1200px',
         margin: '0 auto',
-        padding: '100px 24px 60px',
+        padding: 'clamp(80px, 12vh, 120px) 24px 60px',
         display: 'grid',
         gridTemplateColumns: '1fr 1fr',
         gap: '60px',
@@ -103,18 +104,18 @@ export default function Hero({ onNavigate }: HeroProps) {
             <span style={{ fontSize: '14px' }}>✨</span>
             <span style={{
               fontFamily: 'Inter, sans-serif',
-              fontSize: '13px',
+              fontSize: '11px',
               fontWeight: 500,
               color: 'var(--gold)',
               letterSpacing: '1px',
               textTransform: 'uppercase',
-            }}>
+            }} className="hero-label">
               Confeitaria Artesanal · Brasília
             </span>
           </div>
 
           <h1 style={{
-            fontSize: 'clamp(48px, 8vw, 90px)',
+            fontSize: 'clamp(40px, 10vw, 80px)',
             fontWeight: 800,
             color: 'var(--brown)',
             lineHeight: 1,
@@ -127,12 +128,12 @@ export default function Hero({ onNavigate }: HeroProps) {
 
           <p style={{
             fontFamily: 'Inter, sans-serif',
-            fontSize: '17px',
+            fontSize: '16px',
             lineHeight: 1.7,
             color: 'var(--brown-mid)',
             marginBottom: '36px',
             maxWidth: '480px',
-          }}>
+          }} className="hero-description">
             Brigadeiros gourmet, bolos artesanais e doces personalizados que encantam paladares e criam memórias afetivas inesquecíveis.
           </p>
 
@@ -143,9 +144,9 @@ export default function Hero({ onNavigate }: HeroProps) {
                 background: 'linear-gradient(135deg, var(--rose), var(--rose-dark))',
                 color: 'white',
                 fontFamily: 'Inter, sans-serif',
-                fontSize: '16px',
+                fontSize: '15px',
                 fontWeight: 600,
-                padding: '16px 36px',
+                padding: '14px 32px',
                 borderRadius: '50px',
                 border: 'none',
                 textDecoration: 'none',
@@ -171,9 +172,9 @@ export default function Hero({ onNavigate }: HeroProps) {
                 background: 'transparent',
                 color: 'var(--brown)',
                 fontFamily: 'Inter, sans-serif',
-                fontSize: '16px',
+                fontSize: '15px',
                 fontWeight: 600,
-                padding: '16px 36px',
+                padding: '14px 32px',
                 borderRadius: '50px',
                 textDecoration: 'none',
                 border: '2px solid rgba(61, 35, 20, 0.2)',
@@ -196,10 +197,11 @@ export default function Hero({ onNavigate }: HeroProps) {
           {/* Stats */}
           <div style={{
             display: 'flex',
-            gap: '36px',
+            gap: 'clamp(20px, 5vw, 40px)',
             marginTop: '48px',
             paddingTop: '36px',
             borderTop: '1px solid rgba(201, 168, 76, 0.2)',
+            flexWrap: 'wrap'
           }}>
             {[
               { number: '+500', label: 'Pedidos realizados' },
@@ -209,7 +211,7 @@ export default function Hero({ onNavigate }: HeroProps) {
               <div key={stat.label}>
                 <div style={{
                   fontFamily: 'Playfair Display, serif',
-                  fontSize: '28px',
+                  fontSize: '24px',
                   fontWeight: 700,
                   background: 'linear-gradient(135deg, var(--rose), var(--rose-dark))',
                   WebkitBackgroundClip: 'text',
@@ -220,7 +222,7 @@ export default function Hero({ onNavigate }: HeroProps) {
                 </div>
                 <div style={{
                   fontFamily: 'Inter, sans-serif',
-                  fontSize: '12px',
+                  fontSize: '11px',
                   color: 'var(--brown-mid)',
                   marginTop: '2px',
                 }}>
@@ -245,7 +247,7 @@ export default function Hero({ onNavigate }: HeroProps) {
             overflow: 'hidden',
             boxShadow: '0 30px 80px rgba(61, 35, 20, 0.2)',
             aspectRatio: '1',
-          }}>
+          }} className="hero-img-frame">
             <img
               src="./hero.png"
               alt="Doces artesanais Bia Lobo"
@@ -269,23 +271,25 @@ export default function Hero({ onNavigate }: HeroProps) {
             transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
             style={{
               position: 'absolute',
-              top: '-20px',
-              right: '-20px',
+              top: '-10px',
+              right: '-10px',
               background: 'white',
               borderRadius: '20px',
-              padding: '12px 18px',
+              padding: '10px 15px',
               boxShadow: '0 10px 30px rgba(61,35,20,0.12)',
               display: 'flex',
               alignItems: 'center',
-              gap: '10px',
+              gap: '8px',
+              zIndex: 10
             }}
+            className="floating-badge"
           >
-            <span style={{ fontSize: '24px' }}>🌸</span>
+            <span style={{ fontSize: '20px' }}>🌸</span>
             <div>
-              <div style={{ fontFamily: 'Playfair Display, serif', fontSize: '13px', fontWeight: 700, color: 'var(--brown)' }}>
+              <div style={{ fontFamily: 'Playfair Display, serif', fontSize: '11px', fontWeight: 700, color: 'var(--brown)' }}>
                 100% Artesanal
               </div>
-              <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '11px', color: 'var(--brown-mid)' }}>
+              <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '10px', color: 'var(--brown-mid)' }}>
                 Feito com amor
               </div>
             </div>
@@ -297,19 +301,21 @@ export default function Hero({ onNavigate }: HeroProps) {
             transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
             style={{
               position: 'absolute',
-              bottom: '-16px',
-              left: '-16px',
+              bottom: '-10px',
+              left: '-10px',
               background: 'linear-gradient(135deg, var(--rose), var(--rose-dark))',
               borderRadius: '16px',
-              padding: '12px 18px',
+              padding: '10px 15px',
               boxShadow: '0 10px 30px rgba(201, 125, 140, 0.4)',
               color: 'white',
+              zIndex: 10
             }}
+            className="bottom-tag"
           >
-            <div style={{ fontFamily: 'Dancing Script, cursive', fontSize: '14px', marginBottom: '2px' }}>
+            <div style={{ fontFamily: 'Dancing Script, cursive', fontSize: '13px', marginBottom: '2px' }}>
               Entrega em Brasília 🗺️
             </div>
-            <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '11px', opacity: 0.9 }}>
+            <div style={{ fontFamily: 'Inter, sans-serif', fontSize: '10px', opacity: 0.9 }}>
               Santa Maria & região
             </div>
           </motion.div>
@@ -327,7 +333,7 @@ export default function Hero({ onNavigate }: HeroProps) {
         alignItems: 'center',
         gap: '6px',
         opacity: 0.5,
-      }}>
+      }} className="scroll-indicator">
         <div style={{
           fontFamily: 'Inter, sans-serif',
           fontSize: '11px',
@@ -350,7 +356,14 @@ export default function Hero({ onNavigate }: HeroProps) {
           .hero-grid {
             grid-template-columns: 1fr !important;
             gap: 40px !important;
+            padding-top: 100px !important;
           }
+          .hero-img-frame {
+            max-width: 320px;
+            margin: 0 auto;
+          }
+          .petal, .scroll-indicator { display: none; }
+          .hero-label { font-size: 10px !important; }
         }
       `}</style>
     </section>
