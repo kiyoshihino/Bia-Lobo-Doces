@@ -8,6 +8,7 @@ const navLinks = [
   { label: 'Nossos Doces', id: 'doces' },
   { label: 'Galeria', id: 'galeria' },
   { label: 'Contato', id: 'contato' },
+  { label: 'Links', id: 'links' },
 ]
 
 interface NavbarProps {
@@ -29,6 +30,12 @@ export default function Navbar({ onNavigate, isPoliciesPage }: NavbarProps) {
   const handleLinkClick = (id: string) => {
     if (id === 'doces') {
       onNavigate('catalog')
+      setOpen(false)
+      return
+    }
+
+    if (id === 'links') {
+      onNavigate('links')
       setOpen(false)
       return
     }
