@@ -134,11 +134,11 @@ export default function BioLinks({ onNavigate }: BioLinksProps) {
               overflow: 'hidden',
               background: '#1a1020',
             }}>
-              {profile.logo && profile.logo !== '🌸' ? (
-                <img src={profile.logo.replace(/^\.\//, '/')} alt={profile.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              ) : (
-                <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '48px', background: 'linear-gradient(135deg, #9B5A6A, #C97D8C)' }}>🌸</div>
-              )}
+              <img 
+                src={profile.logo && profile.logo !== '🌸' ? profile.logo.replace(/^\.\//, '/') : '/assets/logo.png'} 
+                alt={profile.name} 
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+              />
             </div>
           </div>
 
