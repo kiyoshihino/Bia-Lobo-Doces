@@ -1,29 +1,17 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Lock, Mail, ArrowRight, Eye, EyeOff } from 'lucide-react'
+import { Lock, User, ArrowRight, Eye, EyeOff } from 'lucide-react'
 
 interface LoginProps {
   onLogin: () => void
 }
 
 export default function Login({ onLogin }: LoginProps) {
-  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-
-  // SHA-256 hash of the admin credentials (generated offline, never stored in plaintext)
-  const VALID_EMAIL = 'comercial@aartdigital.com.br'
-  // SHA-256 of '211938Mbt'
-  const VALID_PASS_HASH = '1e420209d760fb4981cda999f0ab8512c653a80ad77085270605654dc4bb8f4d'
-
-  const hashString = async (str: string): Promise<string> => {
-    const msgBuffer = new TextEncoder().encode(str)
-    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer)
-    const hashArray = Array.from(new Uint8Array(hashBuffer))
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -31,12 +19,21 @@ export default function Login({ onLogin }: LoginProps) {
     setIsLoading(true)
 
     try {
-      const passHash = await hashString(password)
-      if (email === VALID_EMAIL && passHash === VALID_PASS_HASH) {
+      const response = await fetch('/api/auth.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password })
+      })
+
+      const data = await response.json()
+
+      if (response.ok && data.success) {
         localStorage.setItem('bia_lobo_auth', 'true')
         onLogin()
       } else {
-        setError('E-mail ou senha incorretos. Por favor, tente novamente.')
+        setError(data.error || 'Usuário ou senha incorretos.')
         setIsLoading(false)
       }
     } catch {
@@ -136,16 +133,16 @@ export default function Login({ onLogin }: LoginProps) {
               textTransform: 'uppercase',
               letterSpacing: '0.5px'
             }}>
-              E-mail
+              Usuário
             </label>
             <div style={{ position: 'relative' }}>
-              <Mail size={18} style={{ position: 'absolute', left: '18px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(61, 35, 20, 0.4)' }} />
+              <User size={18} style={{ position: 'absolute', left: '18px', top: '50%', transform: 'translateY(-50%)', color: 'rgba(61, 35, 20, 0.4)' }} />
               <input 
-                type="email" 
+                type="text" 
                 required 
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder="exemplo@email.com"
+                value={username}
+                onChange={e => setUsername(e.target.value)}
+                placeholder="Ex: bia"
                 style={{ 
                   width: '100%', 
                   padding: '16px 20px 16px 52px', 

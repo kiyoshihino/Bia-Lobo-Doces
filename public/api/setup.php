@@ -36,6 +36,24 @@ try {
         category VARCHAR(100),
         tags TEXT
     )");
+    // Tabela: Users (Múltiplos Acessos)
+    $pdo->exec("CREATE TABLE IF NOT EXISTS users (
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        username VARCHAR(50) UNIQUE NOT NULL,
+        password_hash VARCHAR(255) NOT NULL
+    )");
+
+    // Inserir Usuários Iniciais (Seed) se vazio
+    $stmtUsers = $pdo->query("SELECT COUNT(*) FROM users");
+    if ($stmtUsers->fetchColumn() == 0) {
+        $hashKiyoshi = password_hash('SenhaKiyoshi123', PASSWORD_DEFAULT);
+        $hashBia = password_hash('BiaDoces2026', PASSWORD_DEFAULT);
+        
+        $pdo->exec("INSERT INTO users (username, password_hash) VALUES 
+            ('kiyoshi', '$hashKiyoshi'),
+            ('bia', '$hashBia')
+        ");
+    }
 
     // Inserir Perfil Inicial (Seed) se vazio
     $stmt = $pdo->query("SELECT COUNT(*) FROM profile");
