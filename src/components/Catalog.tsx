@@ -136,7 +136,7 @@ export default function Catalog({ onSelectProduct, initialCategory = 'Todos' }: 
         </header>
 
         {/* High-End Layout Grid */}
-        <div style={{ 
+        <div className="catalog-grid" style={{ 
           display: 'grid', 
           gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))', 
           gap: '40px 24px' 
@@ -268,6 +268,25 @@ export default function Catalog({ onSelectProduct, initialCategory = 'Todos' }: 
           </motion.div>
         )}
       </div>
+      <style>{`
+        @media (max-width: 768px) {
+          .catalog-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 20px 12px !important;
+          }
+          .catalog-grid h3 {
+            font-size: 18px !important;
+          }
+          .catalog-grid div[style*="fontSize: '18px'"] {
+            font-size: 16px !important;
+            margin-bottom: 12px !important;
+          }
+          .catalog-grid button {
+            padding: 8px 16px !important;
+            font-size: 11px !important;
+          }
+        }
+      `}</style>
     </section>
   )
 }

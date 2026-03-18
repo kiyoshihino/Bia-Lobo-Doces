@@ -180,9 +180,9 @@ export default function Products() {
         </motion.div>
 
         {/* Grid */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+        <div className="products-grid" style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', 
           gap: '24px',
           marginBottom: '48px',
         }}>
@@ -225,6 +225,25 @@ export default function Products() {
           </a>
         </div>
       </div>
+      <style>{`
+        @media (max-width: 768px) {
+          .products-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 16px !important;
+          }
+          .products-grid > div {
+            padding: 20px 16px !important;
+          }
+          .products-grid h3 {
+            font-size: 16px !important;
+            margin-bottom: 6px !important;
+          }
+          .products-grid p {
+            font-size: 12px !important;
+            line-height: 1.4 !important;
+          }
+        }
+      `}</style>
     </section>
   )
 }
