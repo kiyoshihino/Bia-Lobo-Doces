@@ -26,6 +26,12 @@ export default function Navbar({ onNavigate, isPoliciesPage }: NavbarProps) {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  const handleWhatsAppClick = () => {
+    const message = encodeURIComponent("Olá Bia, tudo bem? Vim através do site e quero fazer um encomenda, pode me ajudar?");
+    window.open(`https://wa.me/${profile.whatsapp}?text=${message}`, '_blank');
+    setOpen(false)
+  };
+
   const handleLinkClick = (id: string) => {
     if (id === 'doces') {
       onNavigate('catalog')
@@ -186,7 +192,7 @@ export default function Navbar({ onNavigate, isPoliciesPage }: NavbarProps) {
             </button>
 
           <button
-            onClick={() => onNavigate('catalog')}
+            onClick={handleWhatsAppClick}
             style={{
               background: 'linear-gradient(135deg, var(--rose), var(--rose-dark))',
               color: 'white',
@@ -292,7 +298,7 @@ export default function Navbar({ onNavigate, isPoliciesPage }: NavbarProps) {
           </button>
 
           <button
-            onClick={() => { onNavigate('catalog'); setOpen(false) }}
+            onClick={handleWhatsAppClick}
             style={{
               background: 'linear-gradient(135deg, var(--rose), var(--rose-dark))',
               color: 'white',

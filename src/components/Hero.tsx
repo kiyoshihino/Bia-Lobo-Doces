@@ -20,6 +20,11 @@ export default function Hero({ onNavigate }: HeroProps) {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  const handleWhatsAppClick = () => {
+    const message = encodeURIComponent("Olá Bia, tudo bem? Vim através do site e quero fazer um encomenda, pode me ajudar?");
+    window.open(`https://wa.me/${profile.whatsapp}?text=${message}`, '_blank');
+  };
+
   return (
     <section
       id="inicio"
@@ -122,7 +127,7 @@ export default function Hero({ onNavigate }: HeroProps) {
 
           <div className="hero-buttons" style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
             <button
-              onClick={() => onNavigate('catalog')}
+              onClick={handleWhatsAppClick}
               style={{
                 background: 'linear-gradient(135deg, var(--rose), var(--rose-dark))',
                 color: 'white',
