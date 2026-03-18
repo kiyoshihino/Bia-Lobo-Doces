@@ -1,16 +1,20 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
-  
-  # 1. Silently rewrite root to dist folder
-  RewriteRule ^$ dist/index.html [L]
-  
-  # 2. If the request exists directly in dist (like /assets/...), serve it
-  RewriteCond %{DOCUMENT_ROOT}/dist/$1 -f
+
+  # 1. If the request is for a file that exists in the root, serve it
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^ - [L]
+
+  # 2. If the request points to a file inside the dist folder, serve it
+  # This handles mapping /assets/foo.js to dist/assets/foo.js silently
+  RewriteCond %{DOCUMENT_ROOT}/dist%{REQUEST_URI} -f
   RewriteRule ^(.*)$ dist/$1 [L]
-  
-  # 3. Handle SPA fallback for clean URLs (/links, /cardapio, etc)
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
+
+  # 3. Redirect the root URL exactly to dist/index.html
+  RewriteRule ^$ dist/index.html [L]
+
+  # 4. Fallback for all other routes (SPA routes like /links, /cardapio)
+  # This serves the app but keeps the URL clean
   RewriteRule . dist/index.html [L]
 </IfModule>
