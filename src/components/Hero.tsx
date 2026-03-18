@@ -358,10 +358,15 @@ export default function Hero({ onNavigate }: HeroProps) {
 
       <style>{`
         @media (max-width: 768px) {
+          #inicio {
+            flex-direction: column !important;
+            justify-content: center !important;
+            padding-bottom: 20px !important;
+          }
           .hero-grid {
             grid-template-columns: 1fr !important;
             gap: 40px !important;
-            padding: 100px 24px 80px 24px !important;
+            padding: 100px 24px 40px 24px !important;
           }
           .hero-img-frame {
             max-width: 320px;
@@ -369,7 +374,11 @@ export default function Hero({ onNavigate }: HeroProps) {
           }
           .petal { display: none !important; }
           .scroll-indicator {
-            bottom: 20px !important;
+            position: relative !important;
+            bottom: auto !important;
+            left: auto !important;
+            transform: none !important;
+            margin-top: 20px !important;
           }
           .hero-label { font-size: 10px !important; }
           
