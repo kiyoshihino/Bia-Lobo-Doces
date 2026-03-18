@@ -41,9 +41,26 @@ interface CatalogContextType {
   addProduct: (product: Omit<Product, 'id'>) => void;
   updateProduct: (id: string, updated: Partial<Product>) => void;
   deleteProduct: (id: string) => void;
+  isLoading: boolean;
 }
 
 const CatalogContext = createContext<CatalogContextType | undefined>(undefined);
+
+// API Local na pasta /api/ (funciona tanto no Hostinger quanto local se tiver virtualhost PHP)
+const API_URL = '/api/index.php';
+
+const apiCall = async (action: string, data?: any) => {
+  try {
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action, data })
+    });
+    if (!response.ok) throw new Error('Network response error');
+  } catch (error) {
+    console.error(`Falha ao executar ${action} na API. Mude para produção ou rode o setup.php.`, error);
+  }
+};
 
 const DEFAULT_COMPANY: CompanyProfile = {
   name: 'Bia Lobo',
@@ -55,152 +72,101 @@ const DEFAULT_COMPANY: CompanyProfile = {
   instagram: 'bialobodoces',
   facebook: 'bialobodoces',
   email: 'contato@bialobodoces.com.br',
-  bio: 'Há mais de 8 anos, Bia Lobo transforma ingredientes simples em experiências doces únicas. Nascida em Brasília e apaixonada pela arte da confeitaria, ela descobriu seu dom de criar doces artesanais que contam histórias e conectam pessoas.',
+  bio: 'Há mais de 8 anos, Bia Lobo transforma ingredientes...',
   experience: '8+'
 };
 
-const DEFAULT_CATEGORIES: Category[] = [
-  { id: 'cat-1', name: 'Docinhos', image: './gallery/1.jpg' },
-  { id: 'cat-2', name: 'Bolos', image: './gallery/2.jpg' },
-  { id: 'cat-3', name: 'Kits', image: './gallery/3.jpg' },
-  { id: 'cat-4', name: 'Mesa de Doces', image: './gallery/4.jpg' }
-];
-
-const DEFAULT_PRODUCTS: Product[] = [
-  {
-    id: '1',
-    name: 'Brigadeiros Gourmet',
-    description: 'Caixa com 12 unidades de brigadeiros em sabores variados (Pistache, Belga, Ninho e Caramelo).',
-    price: 45.00,
-    image: './gallery/1.jpg',
-    category: 'Docinhos',
-    tags: ['Best Seller', 'Artesanal']
-  },
-  {
-    id: '2',
-    name: 'Bolo Decorado P',
-    description: 'Bolo artesanal de 15cm (10-12 fatias). Escolha massa e recheio personalizados.',
-    price: 180.00,
-    image: './gallery/2.jpg',
-    category: 'Bolos',
-    tags: ['Festa', 'Personalizado']
-  }
-];
-
 export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [profile, setProfile] = useState<CompanyProfile>(() => {
-    const saved = localStorage.getItem('bia_lobo_profile');
-    let data = saved ? JSON.parse(saved) : DEFAULT_COMPANY;
-    
-    // Migration: Update old name and emoji logo to new brand
-    if (data.name === 'Bia Lobo Doces') data.name = 'Bia Lobo';
-    if (data.logo === '🌸' || data.logo === '') data.logo = './assets/logo.png';
-    
-    // Fix absolute paths for logo
-    if (data.logo && data.logo.startsWith('/') && !data.logo.startsWith('//')) {
-      data.logo = '.' + data.logo;
-    }
-    
-    return data;
-  });
-
-  const [categories, setCategories] = useState<Category[]>(() => {
-    const saved = localStorage.getItem('bia_lobo_categories');
-    let items: Category[] = saved ? JSON.parse(saved) : DEFAULT_CATEGORIES;
-    
-    return items.map(c => {
-      let img = c.image;
-      // Migrate broken Drive links
-      if (img && img.includes('drive.google.com')) {
-        const defaultMatch = DEFAULT_CATEGORIES.find(dc => dc.name === c.name);
-        img = defaultMatch ? defaultMatch.image : './gallery/1.jpg';
-      }
-      // Fix absolute paths
-      if (img && img.startsWith('/') && !img.startsWith('//')) {
-        img = '.' + img;
-      }
-      return { ...c, image: img };
-    });
-  });
-
-  const [products, setProducts] = useState<Product[]>(() => {
-    const saved = localStorage.getItem('bia_lobo_products');
-    let items: Product[] = saved ? JSON.parse(saved) : DEFAULT_PRODUCTS;
-    
-    return items.map(p => {
-      let img = p.image;
-      // Migrate broken Drive links
-      if (img && img.includes('drive.google.com')) {
-        const defaultMatch = DEFAULT_PRODUCTS.find(dp => dp.name === p.name);
-        img = defaultMatch ? defaultMatch.image : './gallery/5.jpg';
-      }
-      // Fix absolute paths
-      if (img && img.startsWith('/') && !img.startsWith('//')) {
-        img = '.' + img;
-      }
-      return {
-        ...p,
-        name: p.name.trim(),
-        category: p.category.trim(),
-        image: img
-      };
-    });
-  });
+  const [profile, setProfile] = useState<CompanyProfile>(DEFAULT_COMPANY);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    localStorage.setItem('bia_lobo_profile', JSON.stringify(profile));
-  }, [profile]);
+    fetch(API_URL)
+      .then(res => res.json())
+      .then(data => {
+        if (data.profile && Object.keys(data.profile).length > 0) {
+          setProfile(data.profile);
+        }
+        if (data.categories) setCategories(data.categories);
+        if (data.products) setProducts(data.products);
+      })
+      .catch(err => {
+        console.warn('Backend PHP não encontrado ou com erro. Utilizando layout vazio provisório.', err);
+      })
+      .finally(() => setIsLoading(false));
+  }, []);
 
-  useEffect(() => {
-    localStorage.setItem('bia_lobo_categories', JSON.stringify(categories));
-  }, [categories]);
-
-  useEffect(() => {
-    localStorage.setItem('bia_lobo_products', JSON.stringify(products));
-  }, [products]);
-
-  const updateProfile = (newProfile: CompanyProfile) => setProfile(newProfile);
+  const updateProfile = (newProfile: CompanyProfile) => {
+    setProfile(newProfile);
+    apiCall('updateProfile', newProfile);
+  };
 
   const addCategory = (category: Omit<Category, 'id'>) => {
     const newCategory = { ...category, name: category.name.trim(), id: Date.now().toString() };
-    setCategories([...categories, newCategory]);
+    setCategories(prev => [...prev, newCategory]);
+    apiCall('addCategory', newCategory);
   };
 
   const updateCategory = (id: string, updated: Partial<Category>) => {
     const newName = updated.name?.trim();
     const oldCategory = categories.find(c => c.id === id);
+    
+    // Cascata: muda o nome da categoria no produto se o nome da categoria mudar
     if (newName && oldCategory && oldCategory.name !== newName) {
       setProducts(prev => prev.map(p => p.category === oldCategory.name ? { ...p, category: newName } : p));
     }
-    setCategories(categories.map(c => c.id === id ? { ...c, ...updated, name: newName || c.name } : c));
-  };
-
-  const deleteCategory = (id: string) => setCategories(categories.filter(c => c.id !== id));
-
-  const addProduct = (product: Omit<Product, 'id'>) => {
-    const newProduct = { ...product, name: product.name.trim(), category: product.category.trim(), id: Date.now().toString() };
-    setProducts([...products, newProduct]);
-  };
-
-  const updateProduct = (id: string, updated: Partial<Product>) => {
-    setProducts(products.map(p => {
-      if (p.id !== id) return p;
-      return { 
-        ...p, 
-        ...updated, 
-        name: updated.name?.trim() ?? p.name, 
-        category: updated.category?.trim() ?? p.category 
-      };
+    
+    // Atualiza
+    setCategories(prev => prev.map(c => {
+      if (c.id === id) {
+        const fullCat = { ...c, ...updated, name: newName || c.name };
+        apiCall('updateCategory', fullCat);
+        return fullCat;
+      }
+      return c;
     }));
   };
 
-  const deleteProduct = (id: string) => setProducts(products.filter(p => p.id !== id));
+  const deleteCategory = (id: string) => {
+    setCategories(prev => prev.filter(c => c.id !== id));
+    apiCall('deleteCategory', { id });
+  };
+
+  const addProduct = (product: Omit<Product, 'id'>) => {
+    const newProduct = { ...product, name: product.name.trim(), category: product.category.trim(), id: Date.now().toString() };
+    setProducts(prev => [...prev, newProduct]);
+    apiCall('addProduct', newProduct);
+  };
+
+  const updateProduct = (id: string, updated: Partial<Product>) => {
+    setProducts(prev => prev.map(p => {
+      if (p.id === id) {
+        const fullProd = {
+          ...p,
+          ...updated,
+          name: updated.name?.trim() ?? p.name,
+          category: updated.category?.trim() ?? p.category
+        };
+        apiCall('updateProduct', fullProd);
+        return fullProd;
+      }
+      return p;
+    }));
+  };
+
+  const deleteProduct = (id: string) => {
+    setProducts(prev => prev.filter(p => p.id !== id));
+    apiCall('deleteProduct', { id });
+  };
 
   return (
     <CatalogContext.Provider value={{
       profile, updateProfile,
       categories, addCategory, updateCategory, deleteCategory,
-      products, addProduct, updateProduct, deleteProduct
+      products, addProduct, updateProduct, deleteProduct,
+      isLoading
     }}>
       {children}
     </CatalogContext.Provider>

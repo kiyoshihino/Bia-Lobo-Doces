@@ -13,21 +13,36 @@ export default function Login({ onLogin }: LoginProps) {
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // SHA-256 hash of the admin credentials (generated offline, never stored in plaintext)
+  const VALID_EMAIL = 'comercial@aartdigital.com.br'
+  // SHA-256 of '211938Mbt'
+  const VALID_PASS_HASH = '1e420209d760fb4981cda999f0ab8512c653a80ad77085270605654dc4bb8f4d'
+
+  const hashString = async (str: string): Promise<string> => {
+    const msgBuffer = new TextEncoder().encode(str)
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer)
+    const hashArray = Array.from(new Uint8Array(hashBuffer))
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
     setIsLoading(true)
 
-    // Simulated auth check with provided credentials
-    setTimeout(() => {
-      if (email === 'comercial@aartdigital.com.br' && password === '211938Mbt') {
+    try {
+      const passHash = await hashString(password)
+      if (email === VALID_EMAIL && passHash === VALID_PASS_HASH) {
         localStorage.setItem('bia_lobo_auth', 'true')
         onLogin()
       } else {
         setError('E-mail ou senha incorretos. Por favor, tente novamente.')
         setIsLoading(false)
       }
-    }, 800)
+    } catch {
+      setError('Erro ao autenticar. Tente novamente.')
+      setIsLoading(false)
+    }
   }
 
   return (

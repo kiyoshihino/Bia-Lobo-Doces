@@ -251,6 +251,10 @@ export default function Hero({ onNavigate }: HeroProps) {
             <img
               src="./hero.png"
               alt="Doces artesanais Bia Lobo"
+              fetchPriority="high"
+              loading="eager"
+              width={600}
+              height={600}
               style={{
                 width: '100%',
                 height: '100%',

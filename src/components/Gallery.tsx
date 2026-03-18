@@ -63,6 +63,7 @@ function GalleryCard({ item, index }: { item: typeof galleryItems[0], index: num
           src={item.src}
           alt={item.alt}
           onError={() => setImageError(true)}
+          loading={index === 0 ? 'eager' : 'lazy'}
           style={{
             width: '100%',
             height: '100%',

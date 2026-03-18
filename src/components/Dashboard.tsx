@@ -263,7 +263,6 @@ export default function Dashboard({ onBack }: DashboardProps) {
       {/* Main Content Area */}
       <main style={{ 
         flex: 1, 
-        marginLeft: isSidebarOpen && window.innerWidth >= 768 ? '280px' : '0px',
         padding: '40px clamp(20px, 5vw, 60px)',
         transition: 'margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
       }} className="main-content-dashboard">
@@ -697,6 +696,9 @@ export default function Dashboard({ onBack }: DashboardProps) {
         
         @media (min-width: 768px) {
           .mobile-only { display: none !important; }
+          .main-content-dashboard {
+            margin-left: 280px;
+          }
         }
 
         /* Custom Scrollbar */

@@ -88,6 +88,7 @@ export default function About() {
               <img
                 src="./about_bia.jpg"
                 alt="Bia Lobo - Confeiteira"
+                loading="lazy"
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }}
               />
             </div>

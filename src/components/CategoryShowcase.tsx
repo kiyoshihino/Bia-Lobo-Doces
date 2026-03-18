@@ -9,7 +9,7 @@ export default function CategoryShowcase({ onSelectCategory }: CategoryShowcaseP
   const { categories } = useCatalog()
 
   return (
-    <section id="doces" style={{ padding: '100px 24px', backgroundColor: 'var(--cream)' }}>
+    <section id="categorias" style={{ padding: '100px 24px', backgroundColor: 'var(--cream)' }}>
       <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
         <header style={{ textAlign: 'center', marginBottom: '60px' }}>
           <motion.span

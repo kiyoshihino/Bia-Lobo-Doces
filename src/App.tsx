@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import type { Product } from './hooks/useCatalog'
+import { useCatalog } from './hooks/useCatalog'
 import './index.css'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
@@ -78,20 +79,39 @@ function App() {
 
   // 3. Sync URL AND Title FROM state
   useEffect(() => {
+    window.scrollTo(0, 0)
+
     const meta = PAGE_METADATA[currentPage]
     document.title = `Bia Lobo | ${meta.title}`
     
     const path = window.location.pathname.replace(/^\/|\/$/g, '')
     const targetPath = meta.path
-    
-    // Only update history if the current URL path doesn't match the intended page
-    if (path !== targetPath) {
-      const newUrl = targetPath === '' ? '/' : `/${targetPath}`
-      window.history.pushState({ page: currentPage }, '', newUrl)
-    }
 
-    window.scrollTo(0, 0)
+    // Only push a new history entry if the URL doesn't match AND we haven't already recorded this page
+    if (path !== targetPath || window.history.state?.page !== currentPage) {
+      const newUrl = targetPath === '' ? '/' : `/${targetPath}`
+      // Replace instead of push when path is already correct to avoid duplicates
+      if (path === targetPath) {
+        window.history.replaceState({ page: currentPage }, '', newUrl)
+      } else {
+        window.history.pushState({ page: currentPage }, '', newUrl)
+      }
+    }
   }, [currentPage])
+
+  const { isLoading } = useCatalog()
+
+  if (isLoading) {
+    return (
+      <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--cream)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '20px' }}>
+          <div style={{ width: '48px', height: '48px', border: '3px solid rgba(201, 125, 140, 0.3)', borderTopColor: 'var(--rose)', borderRadius: '50%', animation: 'spin 1s linear infinite' }} className="spinner"></div>
+          <p style={{ color: 'var(--brown)', fontFamily: 'Playfair Display, serif', fontSize: '20px', fontWeight: 600, fontStyle: 'italic' }}>Preparando as doçuras...</p>
+        </div>
+        <style>{`@keyframes spin { 100% { transform: rotate(360deg); } }`}</style>
+      </div>
+    )
+  }
 
   if (currentPage === 'dashboard') {
     if (!isAuthenticated) {
