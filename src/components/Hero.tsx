@@ -361,13 +361,16 @@ export default function Hero({ onNavigate }: HeroProps) {
           .hero-grid {
             grid-template-columns: 1fr !important;
             gap: 40px !important;
-            padding-top: 100px !important;
+            padding: 100px 24px 80px 24px !important;
           }
           .hero-img-frame {
             max-width: 320px;
             margin: 0 auto;
           }
-          .petal, .scroll-indicator { display: none; }
+          .petal { display: none !important; }
+          .scroll-indicator {
+            bottom: 20px !important;
+          }
           .hero-label { font-size: 10px !important; }
           
           /* Centering for mobile */
