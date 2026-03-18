@@ -54,23 +54,34 @@ export default function Hero({ onNavigate }: HeroProps) {
         pointerEvents: 'none',
       }} />
 
-      {/* Floating sweets */}
-      {['🍰', '🧁', '🍩', '🍫'].map((sweet, i) => (
+      {/* Floating brigadeiros */}
+      {[
+        { src: './assets/brigadeiro_chocolate.png', alt: 'Brigadeiro Chocolate' },
+        { src: './assets/brigadeiro_branco.png', alt: 'Brigadeiro Branco' },
+        { src: './assets/brigadeiro_morango.png', alt: 'Brigadeiro Morango' },
+        { src: './assets/brigadeiro_chocolate.png', alt: 'Brigadeiro Gourmet' }
+      ].map((item, i) => (
         <div
           key={i}
           style={{
             position: 'absolute',
-            fontSize: `${18 + i * 5}px`,
-            opacity: 0.3,
+            width: `${40 + i * 15}px`,
+            height: `${40 + i * 15}px`,
+            opacity: 0.25,
             top: `${20 + i * 18}%`,
             left: `${5 + i * 4}%`,
             animation: `float ${4 + i}s ease-in-out infinite`,
             animationDelay: `${i * 0.8}s`,
             pointerEvents: 'none',
+            zIndex: 0
           }}
           className="petal"
         >
-          {sweet}
+          <img 
+            src={item.src} 
+            alt={item.alt} 
+            style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'drop-shadow(0 5px 15px rgba(0,0,0,0.1))' }} 
+          />
         </div>
       ))}
 
