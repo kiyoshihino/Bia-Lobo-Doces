@@ -153,7 +153,7 @@ export default function Products() {
             display: 'block',
             marginBottom: '8px',
           }}>
-            Cardápio
+            Arte em Doces
           </span>
           <h2 style={{
             fontFamily: 'Playfair Display, serif',
@@ -162,7 +162,7 @@ export default function Products() {
             color: 'var(--brown)',
             marginBottom: '16px',
           }}>
-            Nossos Doces
+            Nosso Cardápio
           </h2>
           <div className="ornament-divider">
             <span style={{ color: 'var(--gold)', fontSize: '20px' }}>✦</span>
