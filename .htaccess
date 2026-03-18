@@ -1,18 +1,16 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
+  RewriteBase /
   
-  # Silently rewrite root to dist folder
+  # 1. Silently rewrite root to dist folder
   RewriteRule ^$ dist/index.html [L]
   
-  # For any request that is not a file or directory
-  RewriteCond %{REQUEST_URI} !^/dist/
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule ^(.*)$ dist/index.html [L]
+  # 2. If the request exists directly in dist (like /assets/...), serve it
+  RewriteCond %{DOCUMENT_ROOT}/dist/$1 -f
+  RewriteRule ^(.*)$ dist/$1 [L]
   
-  # Support files inside dist
-  RewriteCond %{REQUEST_URI} ^/dist/
+  # 3. Handle SPA fallback for clean URLs (/links, /cardapio, etc)
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule ^(.*)$ dist/index.html [L]
+  RewriteRule . dist/index.html [L]
 </IfModule>
