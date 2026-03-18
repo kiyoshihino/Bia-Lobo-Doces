@@ -27,46 +27,62 @@ const PAGE_METADATA: Record<Page, { title: string, param: string }> = {
 }
 
 function App() {
-  const [currentPage, setCurrentPage] = useState<Page>('home')
+  // 1. Initialize state directly from URL to avoid initial mount flicker
+  const [currentPage, setCurrentPage] = useState<Page>(() => {
+    const params = new URLSearchParams(window.location.search)
+    const p = params.get('p')
+    const foundPage = (Object.keys(PAGE_METADATA) as Page[]).find(
+      key => PAGE_METADATA[key].param === p
+    )
+    if (foundPage) return foundPage
+    if (['home', 'policies', 'dashboard', 'catalog', 'links'].includes(p as any)) return p as Page
+    return 'home'
+  })
+
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [selectedCategory, setSelectedCategory] = useState<string>('Todos')
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
     return localStorage.getItem('bia_lobo_auth') === 'true'
   })
 
-  // Sync state FROM URL on mount and popstate
+  // 2. Sync state FROM URL on POPSTATE (Back/Forward buttons)
   useEffect(() => {
-    const syncFromUrl = () => {
-      const params = new URLSearchParams(window.location.search)
-      const p = params.get('p')
-      
-      const foundPage = (Object.keys(PAGE_METADATA) as Page[]).find(
-        key => PAGE_METADATA[key].param === p
-      ) || (['home', 'policies', 'dashboard', 'catalog', 'links'].includes(p as any) ? p as Page : 'home')
-
-      if (foundPage !== currentPage) {
+    const handlePopState = (e: PopStateEvent) => {
+      const pageFromState = e.state?.page as Page
+      if (pageFromState && PAGE_METADATA[pageFromState]) {
+        setCurrentPage(pageFromState)
+      } else {
+        const params = new URLSearchParams(window.location.search)
+        const p = params.get('p')
+        const foundPage = (Object.keys(PAGE_METADATA) as Page[]).find(
+          key => PAGE_METADATA[key].param === p
+        ) || (['home', 'policies', 'dashboard', 'catalog', 'links'].includes(p as any) ? p as Page : 'home')
         setCurrentPage(foundPage)
       }
     }
 
-    syncFromUrl()
-    window.addEventListener('popstate', syncFromUrl)
-    return () => window.removeEventListener('popstate', syncFromUrl)
-  }, [currentPage])
+    window.addEventListener('popstate', handlePopState)
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [])
 
-  // Sync URL AND Title FROM state
+  // 3. Sync URL AND Title FROM state
   useEffect(() => {
     const meta = PAGE_METADATA[currentPage]
     document.title = `Bia Lobo | ${meta.title}`
     
-    // Update URL without adding multiple history entries if already there
     const params = new URLSearchParams(window.location.search)
-    if (params.get('p') !== meta.param) {
-      const newUrl = meta.param === 'home' || meta.param === 'inicio' 
-        ? window.location.pathname 
-        : `${window.location.pathname}?p=${meta.param}`
-      
-      window.history.pushState({ page: currentPage }, '', newUrl)
+    const currentParam = params.get('p')
+    const targetParam = meta.param
+    
+    // Only update history if the current URL doesn't match the intended page
+    // and this isn't the initial load (where they already match)
+    if (currentParam !== targetParam) {
+      if (currentPage === 'home' && !currentParam) {
+        // Already at home base URL, no need to push
+      } else {
+        const newUrl = targetParam === 'inicio' ? window.location.pathname : `?p=${targetParam}`
+        window.history.pushState({ page: currentPage }, '', newUrl)
+      }
     }
 
     window.scrollTo(0, 0)
