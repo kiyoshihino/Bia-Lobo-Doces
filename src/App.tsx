@@ -16,26 +16,59 @@ import Dashboard from './components/Dashboard'
 import BioLinks from './components/BioLinks'
 import Login from './components/Login'
 
+type Page = 'home' | 'policies' | 'dashboard' | 'catalog' | 'links'
+
+const PAGE_METADATA: Record<Page, { title: string, param: string }> = {
+  home: { title: 'Início', param: 'inicio' },
+  catalog: { title: 'Cardápio', param: 'cardapio' },
+  links: { title: 'Links', param: 'links' },
+  policies: { title: 'Políticas', param: 'politicas' },
+  dashboard: { title: 'Painel', param: 'painel' }
+}
+
 function App() {
-  const [currentPage, setCurrentPage] = useState<'home' | 'policies' | 'dashboard' | 'catalog' | 'links'>('home')
+  const [currentPage, setCurrentPage] = useState<Page>('home')
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [selectedCategory, setSelectedCategory] = useState<string>('Todos')
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
     return localStorage.getItem('bia_lobo_auth') === 'true'
   })
 
+  // Sync state FROM URL on mount and popstate
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    const p = params.get('p')
-    if (p && ['home', 'policies', 'dashboard', 'catalog', 'links'].includes(p)) {
-      setCurrentPage(p as any)
-      // Clean up the URL without reloading
-      const newUrl = window.location.pathname
-      window.history.replaceState({}, '', newUrl)
-    }
-  }, []) // Run only on initial mount
+    const syncFromUrl = () => {
+      const params = new URLSearchParams(window.location.search)
+      const p = params.get('p')
+      
+      const foundPage = (Object.keys(PAGE_METADATA) as Page[]).find(
+        key => PAGE_METADATA[key].param === p
+      ) || (['home', 'policies', 'dashboard', 'catalog', 'links'].includes(p as any) ? p as Page : 'home')
 
+      if (foundPage !== currentPage) {
+        setCurrentPage(foundPage)
+      }
+    }
+
+    syncFromUrl()
+    window.addEventListener('popstate', syncFromUrl)
+    return () => window.removeEventListener('popstate', syncFromUrl)
+  }, [currentPage])
+
+  // Sync URL AND Title FROM state
   useEffect(() => {
+    const meta = PAGE_METADATA[currentPage]
+    document.title = `Bia Lobo | ${meta.title}`
+    
+    // Update URL without adding multiple history entries if already there
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('p') !== meta.param) {
+      const newUrl = meta.param === 'home' || meta.param === 'inicio' 
+        ? window.location.pathname 
+        : `${window.location.pathname}?p=${meta.param}`
+      
+      window.history.pushState({ page: currentPage }, '', newUrl)
+    }
+
     window.scrollTo(0, 0)
   }, [currentPage])
 
