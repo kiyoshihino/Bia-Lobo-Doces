@@ -60,10 +60,10 @@ const DEFAULT_COMPANY: CompanyProfile = {
 };
 
 const DEFAULT_CATEGORIES: Category[] = [
-  { id: 'cat-1', name: 'Docinhos', image: 'https://drive.google.com/thumbnail?id=1aYGFBGabNtOD9_g8f5vu7m5oGOHEq1EV&sz=w600' },
-  { id: 'cat-2', name: 'Bolos', image: 'https://drive.google.com/thumbnail?id=1jDRq9hbR4nN7cI5FzGUzP-0l5WUQH4Hk&sz=w600' },
-  { id: 'cat-3', name: 'Kits', image: 'https://drive.google.com/thumbnail?id=10QlmFgimPU3H5gU9D02bLVDxVf_JTYL7&sz=w600' },
-  { id: 'cat-4', name: 'Mesa de Doces', image: 'https://drive.google.com/thumbnail?id=1HvNazS3y_P3GaJpYneMFpMkr3usPXSKB&sz=w600' }
+  { id: 'cat-1', name: 'Docinhos', image: './gallery/1.jpg' },
+  { id: 'cat-2', name: 'Bolos', image: './gallery/2.jpg' },
+  { id: 'cat-3', name: 'Kits', image: './gallery/3.jpg' },
+  { id: 'cat-4', name: 'Mesa de Doces', image: './gallery/4.jpg' }
 ];
 
 const DEFAULT_PRODUCTS: Product[] = [
@@ -72,7 +72,7 @@ const DEFAULT_PRODUCTS: Product[] = [
     name: 'Brigadeiros Gourmet',
     description: 'Caixa com 12 unidades de brigadeiros em sabores variados (Pistache, Belga, Ninho e Caramelo).',
     price: 45.00,
-    image: 'https://drive.google.com/thumbnail?id=1aYGFBGabNtOD9_g8f5vu7m5oGOHEq1EV&sz=w600',
+    image: './gallery/1.jpg',
     category: 'Docinhos',
     tags: ['Best Seller', 'Artesanal']
   },
@@ -81,7 +81,7 @@ const DEFAULT_PRODUCTS: Product[] = [
     name: 'Bolo Decorado P',
     description: 'Bolo artesanal de 15cm (10-12 fatias). Escolha massa e recheio personalizados.',
     price: 180.00,
-    image: 'https://drive.google.com/thumbnail?id=1jDRq9hbR4nN7cI5FzGUzP-0l5WUQH4Hk&sz=w600',
+    image: './gallery/2.jpg',
     category: 'Bolos',
     tags: ['Festa', 'Personalizado']
   }
@@ -108,12 +108,19 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
     const saved = localStorage.getItem('bia_lobo_categories');
     let items: Category[] = saved ? JSON.parse(saved) : DEFAULT_CATEGORIES;
     
-    return items.map(c => ({
-      ...c,
-      image: (c.image && c.image.startsWith('/') && !c.image.startsWith('//')) 
-        ? '.' + c.image 
-        : c.image
-    }));
+    return items.map(c => {
+      let img = c.image;
+      // Migrate broken Drive links
+      if (img && img.includes('drive.google.com')) {
+        const defaultMatch = DEFAULT_CATEGORIES.find(dc => dc.name === c.name);
+        img = defaultMatch ? defaultMatch.image : './gallery/1.jpg';
+      }
+      // Fix absolute paths
+      if (img && img.startsWith('/') && !img.startsWith('//')) {
+        img = '.' + img;
+      }
+      return { ...c, image: img };
+    });
   });
 
   const [products, setProducts] = useState<Product[]>(() => {
@@ -122,6 +129,12 @@ export const CatalogProvider: React.FC<{ children: React.ReactNode }> = ({ child
     
     return items.map(p => {
       let img = p.image;
+      // Migrate broken Drive links
+      if (img && img.includes('drive.google.com')) {
+        const defaultMatch = DEFAULT_PRODUCTS.find(dp => dp.name === p.name);
+        img = defaultMatch ? defaultMatch.image : './gallery/5.jpg';
+      }
+      // Fix absolute paths
       if (img && img.startsWith('/') && !img.startsWith('//')) {
         img = '.' + img;
       }
