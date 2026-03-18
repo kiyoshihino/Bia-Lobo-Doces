@@ -82,14 +82,14 @@ export default function Navbar({ onNavigate, isPoliciesPage }: NavbarProps) {
             width: '44px',
             height: '44px',
             borderRadius: '50%',
-            background: profile.logo && (profile.logo.startsWith('/') || profile.logo.startsWith('http') || profile.logo.startsWith('data:')) ? 'transparent' : 'linear-gradient(135deg, var(--blush), var(--rose))',
+            background: profile.logo && (profile.logo.startsWith('/') || profile.logo.startsWith('./') || profile.logo.startsWith('http') || profile.logo.startsWith('data:')) ? 'transparent' : 'linear-gradient(135deg, var(--blush), var(--rose))',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             fontSize: '20px',
             overflow: 'hidden'
           }}>
-            {profile.logo && (profile.logo.startsWith('/') || profile.logo.startsWith('http') || profile.logo.startsWith('data:')) ? (
+            {profile.logo && (profile.logo.startsWith('/') || profile.logo.startsWith('./') || profile.logo.startsWith('http') || profile.logo.startsWith('data:')) ? (
               <img src={profile.logo} alt={profile.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             ) : (
               profile.logo || '🌸'

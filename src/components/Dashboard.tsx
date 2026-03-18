@@ -400,7 +400,9 @@ export default function Dashboard({ onBack }: DashboardProps) {
                     <div>
                       <label style={{ display: 'block', fontSize: '13px', fontWeight: 700, color: 'var(--brown-mid)', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Logo da Empresa</label>
                       <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-                        {profileForm.logo && <img src={profileForm.logo} alt="Preview" style={{ width: '60px', height: '60px', borderRadius: '12px', objectFit: 'cover' }} />}
+                        {profileForm.logo && (profileForm.logo.startsWith('/') || profileForm.logo.startsWith('./') || profileForm.logo.startsWith('http') || profileForm.logo.startsWith('data:')) && (
+                          <img src={profileForm.logo} alt="Preview" style={{ width: '60px', height: '60px', borderRadius: '12px', objectFit: 'cover' }} />
+                        )}
                         <label style={{ 
                           flex: 1, 
                           padding: '16px 20px', 
