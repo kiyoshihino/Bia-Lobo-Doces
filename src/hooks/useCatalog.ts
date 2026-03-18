@@ -82,7 +82,12 @@ export function useCatalog() {
       profile.name = 'Bia Lobo';
     }
     if (profile.logo === '🌸' || profile.logo === '') {
-      profile.logo = '/assets/logo.png';
+      profile.logo = './assets/logo.png';
+    }
+    
+    // Fix absolute paths for logo
+    if (profile.logo && profile.logo.startsWith('/') && !profile.logo.startsWith('//')) {
+      profile.logo = '.' + profile.logo;
     }
     
     return profile;
@@ -90,7 +95,15 @@ export function useCatalog() {
 
   const [categories, setCategories] = useState<Category[]>(() => {
     const saved = localStorage.getItem('bia_lobo_categories');
-    return saved ? JSON.parse(saved) : DEFAULT_CATEGORIES;
+    let items: Category[] = saved ? JSON.parse(saved) : DEFAULT_CATEGORIES;
+    
+    // Fix absolute paths for category images
+    return items.map(c => ({
+      ...c,
+      image: (c.image && c.image.startsWith('/') && !c.image.startsWith('//')) 
+        ? '.' + c.image 
+        : c.image
+    }));
   });
 
   const [products, setProducts] = useState<Product[]>(() => {
@@ -100,12 +113,18 @@ export function useCatalog() {
     // Migration & Cleanup
     return items.map(p => {
       const trimmedCategory = p.category.trim();
-      // If the product category is slightly off (whitespace), fix it. 
-      // If it doesn't exist at all, we keep it but it might not show up unless "Todos" is selected.
+      let img = p.image;
+      
+      // Fix absolute paths for product images
+      if (img && img.startsWith('/') && !img.startsWith('//')) {
+        img = '.' + img;
+      }
+
       return {
         ...p,
         name: p.name.trim(),
-        category: trimmedCategory
+        category: trimmedCategory,
+        image: img
       };
     });
   });
