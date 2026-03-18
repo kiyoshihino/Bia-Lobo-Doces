@@ -280,11 +280,17 @@ export default function Catalog({ onSelectProduct, initialCategory = 'Todos' }: 
       </div>
       <style>{`
         @media (max-width: 768px) {
+          #doces {
+            padding: 80px 20px 60px !important;
+          }
+          #doces header {
+            margin-bottom: 40px !important;
+          }
           .category-nav {
             gap: 8px !important;
             flex-wrap: wrap !important;
-            padding: 20px 0 !important;
-            margin-bottom: 40px !important;
+            padding: 10px 0 !important;
+            margin-bottom: 20px !important;
             border: none !important;
           }
           .category-nav button {
