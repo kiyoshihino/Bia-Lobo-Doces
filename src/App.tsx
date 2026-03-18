@@ -18,24 +18,32 @@ import Login from './components/Login'
 
 type Page = 'home' | 'policies' | 'dashboard' | 'catalog' | 'links'
 
-const PAGE_METADATA: Record<Page, { title: string, param: string }> = {
-  home: { title: 'Início', param: 'inicio' },
-  catalog: { title: 'Cardápio', param: 'cardapio' },
-  links: { title: 'Links', param: 'links' },
-  policies: { title: 'Políticas', param: 'politicas' },
-  dashboard: { title: 'Painel', param: 'painel' }
+const PAGE_METADATA: Record<Page, { title: string, path: string }> = {
+  home: { title: 'Início', path: '' },
+  catalog: { title: 'Cardápio', path: 'cardapio' },
+  links: { title: 'Links', path: 'links' },
+  policies: { title: 'Políticas', path: 'politicas' },
+  dashboard: { title: 'Painel', path: 'painel' }
 }
 
 function App() {
-  // 1. Initialize state directly from URL to avoid initial mount flicker
+  // 1. Initialize state directly from URL path or param
   const [currentPage, setCurrentPage] = useState<Page>(() => {
+    const path = window.location.pathname.replace(/^\/|\/$/g, '')
     const params = new URLSearchParams(window.location.search)
     const p = params.get('p')
-    const foundPage = (Object.keys(PAGE_METADATA) as Page[]).find(
-      key => PAGE_METADATA[key].param === p
+    
+    // Check path first, then param
+    const foundByPath = (Object.keys(PAGE_METADATA) as Page[]).find(
+      key => PAGE_METADATA[key].path === path && path !== ''
     )
-    if (foundPage) return foundPage
-    if (['home', 'policies', 'dashboard', 'catalog', 'links'].includes(p as any)) return p as Page
+    if (foundByPath) return foundByPath
+
+    const foundByParam = (Object.keys(PAGE_METADATA) as Page[]).find(
+      key => PAGE_METADATA[key].path === p
+    )
+    if (foundByParam) return foundByParam
+
     return 'home'
   })
 
@@ -52,11 +60,14 @@ function App() {
       if (pageFromState && PAGE_METADATA[pageFromState]) {
         setCurrentPage(pageFromState)
       } else {
+        const path = window.location.pathname.replace(/^\/|\/$/g, '')
         const params = new URLSearchParams(window.location.search)
         const p = params.get('p')
+        
         const foundPage = (Object.keys(PAGE_METADATA) as Page[]).find(
-          key => PAGE_METADATA[key].param === p
-        ) || (['home', 'policies', 'dashboard', 'catalog', 'links'].includes(p as any) ? p as Page : 'home')
+          key => PAGE_METADATA[key].path === path || PAGE_METADATA[key].path === p
+        ) || 'home'
+        
         setCurrentPage(foundPage)
       }
     }
@@ -70,19 +81,13 @@ function App() {
     const meta = PAGE_METADATA[currentPage]
     document.title = `Bia Lobo | ${meta.title}`
     
-    const params = new URLSearchParams(window.location.search)
-    const currentParam = params.get('p')
-    const targetParam = meta.param
+    const path = window.location.pathname.replace(/^\/|\/$/g, '')
+    const targetPath = meta.path
     
-    // Only update history if the current URL doesn't match the intended page
-    // and this isn't the initial load (where they already match)
-    if (currentParam !== targetParam) {
-      if (currentPage === 'home' && !currentParam) {
-        // Already at home base URL, no need to push
-      } else {
-        const newUrl = targetParam === 'inicio' ? window.location.pathname : `?p=${targetParam}`
-        window.history.pushState({ page: currentPage }, '', newUrl)
-      }
+    // Only update history if the current URL path doesn't match the intended page
+    if (path !== targetPath) {
+      const newUrl = targetPath === '' ? '/' : `/${targetPath}`
+      window.history.pushState({ page: currentPage }, '', newUrl)
     }
 
     window.scrollTo(0, 0)

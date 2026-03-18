@@ -2,9 +2,17 @@
   RewriteEngine On
   
   # Silently rewrite root to dist folder
-  RewriteRule ^$ dist/ [L]
+  RewriteRule ^$ dist/index.html [L]
+  
+  # For any request that is not a file or directory
   RewriteCond %{REQUEST_URI} !^/dist/
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule ^(.*)$ dist/$1 [L]
+  RewriteRule ^(.*)$ dist/index.html [L]
+  
+  # Support files inside dist
+  RewriteCond %{REQUEST_URI} ^/dist/
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.*)$ dist/index.html [L]
 </IfModule>
