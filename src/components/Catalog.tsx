@@ -89,7 +89,7 @@ export default function Catalog({ onSelectProduct, initialCategory = 'Todos' }: 
             borderBottom: '1px solid rgba(61, 35, 20, 0.1)',
             scrollbarWidth: 'none',
             msOverflowStyle: 'none'
-          }} className="hide-scrollbar">
+          }} className="category-nav hide-scrollbar">
             <button
                onClick={() => setActiveCategory('Todos')}
                style={{
@@ -270,6 +270,19 @@ export default function Catalog({ onSelectProduct, initialCategory = 'Todos' }: 
       </div>
       <style>{`
         @media (max-width: 768px) {
+          .category-nav {
+            gap: 15px !important;
+            flex-wrap: wrap !important;
+            padding: 15px 0 !important;
+            margin-bottom: 40px !important;
+          }
+          .category-nav button {
+            font-size: 11px !important;
+            letter-spacing: 0.5px !important;
+          }
+          .category-nav div[style*="height: '2px'"] {
+            bottom: -17px !important;
+          }
           .catalog-grid {
             grid-template-columns: repeat(2, 1fr) !important;
             gap: 20px 12px !important;
