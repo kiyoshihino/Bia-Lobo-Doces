@@ -309,34 +309,7 @@ export default function Hero({ onNavigate }: HeroProps) {
         </motion.div>
       </div>
 
-      {/* Scroll indicator */}
-      <div style={{
-        position: 'absolute',
-        bottom: '30px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '6px',
-        opacity: 0.5,
-      }} className="scroll-indicator">
-        <div style={{
-          fontFamily: 'Inter, sans-serif',
-          fontSize: '11px',
-          letterSpacing: '2px',
-          textTransform: 'uppercase',
-          color: 'var(--brown-mid)',
-        }}>
-          Explorar
-        </div>
-        <div style={{
-          width: '1px',
-          height: '30px',
-          background: 'linear-gradient(to bottom, var(--rose), transparent)',
-          animation: 'float 2s ease-in-out infinite',
-        }} />
-      </div>
+
 
       <style>{`
         @media (max-width: 768px) {
