@@ -54,8 +54,8 @@ export default function Hero({ onNavigate }: HeroProps) {
         pointerEvents: 'none',
       }} />
 
-      {/* Floating petals */}
-      {['🌸', '🌹', '✿', '🌺'].map((petal, i) => (
+      {/* Floating sweets */}
+      {['🍰', '🧁', '🍩', '🍫'].map((sweet, i) => (
         <div
           key={i}
           style={{
@@ -70,7 +70,7 @@ export default function Hero({ onNavigate }: HeroProps) {
           }}
           className="petal"
         >
-          {petal}
+          {sweet}
         </div>
       ))}
 
