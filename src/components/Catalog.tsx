@@ -92,6 +92,7 @@ export default function Catalog({ onSelectProduct, initialCategory = 'Todos' }: 
           }} className="category-nav hide-scrollbar">
             <button
                onClick={() => setActiveCategory('Todos')}
+               className={activeCategory === 'Todos' ? 'active' : ''}
                style={{
                  background: 'none',
                  border: 'none',
@@ -103,17 +104,22 @@ export default function Catalog({ onSelectProduct, initialCategory = 'Todos' }: 
                  letterSpacing: '2px',
                  color: activeCategory === 'Todos' ? 'var(--rose)' : 'var(--brown-mid)',
                  position: 'relative',
-                 transition: 'color 0.3s'
+                 transition: 'all 0.3s',
+                 padding: '8px 16px',
+                 borderRadius: '50px'
                }}
             >
               Todos
-              {activeCategory === 'Todos' && <motion.div layoutId="cat-underline" style={{ position: 'absolute', bottom: '-22px', left: 0, right: 0, height: '2px', backgroundColor: 'var(--rose)' }} />}
+              <div className="cat-line">
+                {activeCategory === 'Todos' && <motion.div layoutId="cat-underline" style={{ position: 'absolute', bottom: '-22px', left: 0, right: 0, height: '2px', backgroundColor: 'var(--rose)' }} />}
+              </div>
             </button>
 
             {categories.map((cat: any) => (
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.name)}
+                className={activeCategory === cat.name ? 'active' : ''}
                 style={{
                   background: 'none',
                   border: 'none',
@@ -125,11 +131,15 @@ export default function Catalog({ onSelectProduct, initialCategory = 'Todos' }: 
                   letterSpacing: '2px',
                   color: activeCategory === cat.name ? 'var(--rose)' : 'var(--brown-mid)',
                   position: 'relative',
-                  transition: 'color 0.3s'
+                  transition: 'all 0.3s',
+                  padding: '8px 16px',
+                  borderRadius: '50px'
                 }}
               >
                 {cat.name}
-                {activeCategory === cat.name && <motion.div layoutId="cat-underline" style={{ position: 'absolute', bottom: '-22px', left: 0, right: 0, height: '2px', backgroundColor: 'var(--rose)' }} />}
+                <div className="cat-line">
+                  {activeCategory === cat.name && <motion.div layoutId="cat-underline" style={{ position: 'absolute', bottom: '-22px', left: 0, right: 0, height: '2px', backgroundColor: 'var(--rose)' }} />}
+                </div>
               </button>
             ))}
           </div>
@@ -271,17 +281,25 @@ export default function Catalog({ onSelectProduct, initialCategory = 'Todos' }: 
       <style>{`
         @media (max-width: 768px) {
           .category-nav {
-            gap: 15px !important;
+            gap: 8px !important;
             flex-wrap: wrap !important;
-            padding: 15px 0 !important;
+            padding: 20px 0 !important;
             margin-bottom: 40px !important;
+            border: none !important;
           }
           .category-nav button {
-            font-size: 11px !important;
+            font-size: 10px !important;
             letter-spacing: 0.5px !important;
+            padding: 8px 14px !important;
+            background: rgba(61, 35, 20, 0.04) !important;
+            color: var(--brown-mid) !important;
           }
-          .category-nav div[style*="height: '2px'"] {
-            bottom: -17px !important;
+          .category-nav button.active {
+            background: var(--rose) !important;
+            color: white !important;
+          }
+          .category-nav .cat-line {
+            display: none !important;
           }
           .catalog-grid {
             grid-template-columns: repeat(2, 1fr) !important;
