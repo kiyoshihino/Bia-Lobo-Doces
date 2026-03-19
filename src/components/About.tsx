@@ -1,6 +1,6 @@
 import { motion, useInView } from 'framer-motion'
 import { useRef } from 'react'
-import { Sparkles, Heart, Award } from 'lucide-react'
+import { Sparkles, Heart } from 'lucide-react'
 import { useCatalog } from '../hooks/useCatalog'
 
 const values = [
@@ -122,8 +122,7 @@ export default function About() {
               <div style={{ marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {[
                   { icon: Sparkles, label: 'Ingredientes Premium' },
-                  { icon: Heart, label: 'Feito com Amor' },
-                  { icon: Award, label: `${profile.experience} de Experiência` }
+                  { icon: Heart, label: 'Feito com Amor' }
                 ].map((item, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <item.icon size={16} color="var(--rose)" />
