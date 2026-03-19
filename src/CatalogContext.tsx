@@ -67,12 +67,12 @@ const DEFAULT_COMPANY: CompanyProfile = {
   logo: './assets/logo.png',
   phone: '+55 61 99259-0209',
   whatsapp: '5561992590209',
-  address: 'Qri 15 casa 12c 5 - Santa Maria (Residencial Santos Dumont), Brasília - DF',
-  addressShort: 'Santa Maria, Brasília e região',
+  address: 'QBR8, bloco O, Residencial Santos Dumont, DF.',
+  addressShort: 'Residencial Santos Dumont, DF',
   instagram: 'bialobodoces',
   facebook: 'bialobodoces',
   email: 'contato@bialobodoces.com.br',
-  bio: 'Há mais de 8 anos, Bia Lobo transforma ingredientes...',
+  bio: 'A Bia Lobo Doces nasceu de forma simples e despretensiosa, entre receitas feitas para a família e para amigos. O que começou como um gesto de carinho logo se transformou em uma grande paixão pela confeitaria.\nMovida pelo desejo constante de aprender e se aperfeiçoar, Bia mergulhou no estudo das técnicas da confeitaria, explorando sabores, massas e texturas. Cada receita passou a ser desenvolvida com cuidado, pesquisa e dedicação, sempre buscando entregar algo especial e memorável.\n\nAssim surgiu a Bia Lobo Doces: uma confeitaria que valoriza o sabor, a qualidade dos ingredientes e a experiência de cada cliente. Cada doce é pensado com atenção aos detalhes, preparado com carinho e feito para participar de momentos importantes e celebrar histórias únicas.\n\nPor trás de cada criação existe muito mais do que técnica: existe amor pelo que se faz. Bia é mãe, esposa, professora e uma apaixonada pela arte de transformar ingredientes em doces que encantam.',
   experience: '8+'
 };
 
