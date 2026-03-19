@@ -195,7 +195,6 @@ export default function Hero({ onNavigate }: HeroProps) {
             {[
               { number: '+500', label: 'Pedidos realizados' },
               { number: '5★', label: 'Avaliação média' },
-              { number: '8+', label: 'Anos de experiência' },
             ].map(stat => (
               <div key={stat.label}>
                 <div style={{
