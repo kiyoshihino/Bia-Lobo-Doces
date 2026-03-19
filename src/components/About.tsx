@@ -140,7 +140,13 @@ export default function About() {
             transition={{ duration: 0.8, delay: 0.3 }}
           >
             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-              <div style={{ color: 'var(--brown-mid)', fontSize: '18px', lineHeight: 1.8, whiteSpace: 'pre-line' }}>
+              <div style={{ 
+                color: 'var(--brown-mid)', 
+                fontSize: '18px', 
+                lineHeight: 1.8, 
+                whiteSpace: 'pre-line',
+                textAlign: 'justify'
+              }}>
                 <p>
                   {profile.bio}
                 </p>
